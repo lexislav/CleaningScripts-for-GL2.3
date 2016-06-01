@@ -101,9 +101,18 @@ class AppWorker:
 
         if options["UpdateGlyphInfo"]:
             self.printLog('-- Updating all Glyphs Info (total %s)' % glyphs_total)
+            font = Glyphs.font
+
+            glyphsNames = []
             for glyph in font.glyphs:
-                print "--- updating %s" % glyph.name
-                glyph.updateGlyphInfo
+            	glyphsNames.append(glyph.name)
+
+            for glyphName in glyphsNames:
+            	print "---updating %s" % glyphName
+            	font.glyphs[glyphName].updateGlyphInfo()
+            # for glyph in font.glyphs:
+            #     print "--- updating %s" % glyph.name
+            #     font.glyphs[glyph.name].updateGlyphInfo
 
         if options["RemoveGlyphOrder"]:
             if options["RemoveAllCustomParameters"]:
