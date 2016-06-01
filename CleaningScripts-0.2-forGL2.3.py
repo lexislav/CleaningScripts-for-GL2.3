@@ -95,11 +95,13 @@ class AppWorker:
 
     def processFont(self, font, onlySelected, options):
 
-        message = '# Proccesing font: ' + font.familyName
         glyphs_total = len(font.glyphs)
+        message = '# Proccesing font: ' + font.familyName + ' (contains %s glyphs)' % glyphs_total
         self.printLog(message)
 
         if options["UpdateGlyphInfo"]:
+            # TODO: Update Glyph info should run only when Use Custom Naming in Font Setting is not allowed.
+            # it seems that that font property is not accessible via script
             self.printLog('-- Updating all Glyphs Info (total %s)' % glyphs_total)
             font = Glyphs.font
 
