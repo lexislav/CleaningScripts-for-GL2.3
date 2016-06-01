@@ -1,4 +1,4 @@
-#MenuTitle: Cleaning Scripts 0.1 for G2.3
+#MenuTitle: Cleaning Scripts 0.2 for GL2.3
 
 import vanilla
 
@@ -13,7 +13,7 @@ class AppController:
 
     def getWindow(self):
 
-        out = vanilla.FloatingWindow((310, 205), "SOME Scripts")
+        out = vanilla.FloatingWindow((310, 305), "Cleaning Scripts v0.2")
 
         height = 20
 
@@ -31,6 +31,13 @@ class AppController:
         out.checkBoxRemoveAllCustomParameters = vanilla.CheckBox((80, height, -15, 19), "Remove all custom parameters", value=False, sizeStyle = 'regular')
         height += 19
 
+        height += 20
+
+        out.textOptions = vanilla.TextBox((15, height, 50, 14), "Options:", sizeStyle = 'regular')
+        out.checkBoxDeleteGlyphs = vanilla.CheckBox((80, height, -15, 19), "Delete glyphs: ", value = False, callback = self.updateWindow, sizeStyle = 'regular')
+        out.textEditGlyphsNames = vanilla.EditText((80 + 120, height + 1, -15, 22), placeholder = "glyphname,glyphname", readOnly = True, sizeStyle = 'regular')
+        height += 19
+
         out.buttonProcess = vanilla.Button((-15 - 80, -15 - 20, -15, -15), "Process", sizeStyle = 'regular', callback=self.process)
         out.setDefaultButton(out.buttonProcess)
 
@@ -38,9 +45,8 @@ class AppController:
 
         return out
 
-    # def updateWindow(self, sender):
-    #
-    #     self.w.textEditSuffix._nsObject.setEditable_(self.w.checkBoxForceSuffix.get())
+    def updateWindow(self, sender):
+        self.w.textEditGlyphsNames._nsObject.setEditable_(self.w.checkBoxDeleteGlyphs.get())
 
     def getSettings(self):
         out = {
@@ -49,6 +55,8 @@ class AppController:
                 "UpdateGlyphInfo": self.w.checkBoxUpdateGlyphInfo.get(),
                 "RemoveGlyphOrder": self.w.checkBoxRemoveGlyphOrder.get(),
                 "RemoveAllCustomParameters": self.w.checkBoxRemoveAllCustomParameters.get(),
+                "DeleteGlyphs": self.w.checkBoxDeleteGlyphs.get(),
+                "glyphsNames": self.w.textEditGlyphsNames.get().strip().lstrip('.')
             }
         }
 
@@ -87,15 +95,26 @@ class AppWorker:
 
     def processFont(self, font, onlySelected, options):
 
-        message = '# Proccesing font: ' + font.familyName
         glyphs_total = len(font.glyphs)
+        message = '# Proccesing font: ' + font.familyName + ' (contains %s glyphs)' % glyphs_total
         self.printLog(message)
 
         if options["UpdateGlyphInfo"]:
+            # TODO: Update Glyph info should run only when Use Custom Naming in Font Setting is not allowed.
+            # it seems that that font property is not accessible via script
             self.printLog('-- Updating all Glyphs Info (total %s)' % glyphs_total)
+            font = Glyphs.font
+
+            glyphsNames = []
             for glyph in font.glyphs:
-                print "--- updating %s" % glyph.name
-                glyph.updateGlyphInfo
+            	glyphsNames.append(glyph.name)
+
+            for glyphName in glyphsNames:
+            	print "---updating %s" % glyphName
+            	font.glyphs[glyphName].updateGlyphInfo()
+            # for glyph in font.glyphs:
+            #     print "--- updating %s" % glyph.name
+            #     font.glyphs[glyph.name].updateGlyphInfo
 
         if options["RemoveGlyphOrder"]:
             if options["RemoveAllCustomParameters"]:
@@ -115,6 +134,16 @@ class AppWorker:
                 	self.printLog('--- Removing parameter %s' % customParameter)
                 	self.removeCustomParameter(font,customParameter)
             else: print "--- No custom parameters found."
+
+        #howtos forother functionalities
+        # Add a glyph
+        #font.glyphs.append(GSGlyph('adieresis'))
+        # Duplicate a glyph under a different name
+        #newGlyph = font.glyphs['A'].copy()
+        #newGlyph.name = 'A.alt'
+        #font.glyphs.append(newGlyph)
+        # Delete a glyph
+        #del(font.glyphs['A.alt'])
 
         return True
 
