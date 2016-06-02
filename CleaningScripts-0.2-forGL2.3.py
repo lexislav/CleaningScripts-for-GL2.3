@@ -131,6 +131,8 @@ class AppWorker:
                 	self.removeCustomParameter(font,customParameter)
             else: print "--- No custom parameters found."
 
+        #TODO: delete glyphs with given name
+        #TODO: the other functionalities :-/
         #howtos forother functionalities
         # Add a glyph
         #font.glyphs.append(GSGlyph('adieresis'))
