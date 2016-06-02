@@ -100,21 +100,17 @@ class AppWorker:
         self.printLog(message)
 
         if options["UpdateGlyphInfo"]:
-            # TODO: Update Glyph info should run only when Use Custom Naming in Font Setting is not allowed.
-            # it seems that that font property is not accessible via script
-            self.printLog('-- Updating all Glyphs Info (total %s)' % glyphs_total)
-            font = Glyphs.font
+            if font.disablesNiceNames:
+                self.printLog('-- WARNING: Can not run Update Glyph Info. Use custom naming is on. You need to turn it off.')
+            else:
+                self.printLog('-- Updating all Glyphs Info (total %s)' % glyphs_total)
+                glyphsNames = []
+                for glyph in font.glyphs:
+            	    glyphsNames.append(glyph.name)
+                for glyphName in glyphsNames:
+                    print "---updating %s" % glyphName
+            	    font.glyphs[glyphName].updateGlyphInfo()
 
-            glyphsNames = []
-            for glyph in font.glyphs:
-            	glyphsNames.append(glyph.name)
-
-            for glyphName in glyphsNames:
-            	print "---updating %s" % glyphName
-            	font.glyphs[glyphName].updateGlyphInfo()
-            # for glyph in font.glyphs:
-            #     print "--- updating %s" % glyph.name
-            #     font.glyphs[glyph.name].updateGlyphInfo
 
         if options["RemoveGlyphOrder"]:
             if options["RemoveAllCustomParameters"]:
