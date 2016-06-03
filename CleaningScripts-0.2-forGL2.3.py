@@ -36,8 +36,8 @@ class AppController:
 
         height += 20
 
-        out.textOptions = vanilla.TextBox((15, height, 50, 14), "Options:", sizeStyle = 'regular')
-        out.checkBoxDeleteGlyphs = vanilla.CheckBox((80, height, -15, 19), "Delete Unnecessary Glyphs: ", value = False, sizeStyle = 'regular')
+        out.textOptions = vanilla.TextBox((15, height, 80, 20), "Remove:", sizeStyle = 'regular')
+        out.checkBoxDeleteUnnecessaryGlyphs = vanilla.CheckBox((80, height, -15, 19), "Delete Unnecessary Glyphs", value = False, sizeStyle = 'regular')
         height += 19
 
         out.buttonProcess = vanilla.Button((-15 - 80, -15 - 20, -15, -15), "Process", sizeStyle = 'regular', callback=self.process)
@@ -57,7 +57,7 @@ class AppController:
                 "UpdateGlyphInfo": self.w.checkBoxUpdateGlyphInfo.get(),
                 "RemoveGlyphOrder": self.w.checkBoxRemoveGlyphOrder.get(),
                 "RemoveAllCustomParameters": self.w.checkBoxRemoveAllCustomParameters.get(),
-                "DeleteGlyphs": self.w.checkBoxDeleteGlyphs.get(),
+                "DeleteUnnecessaryGlyphs": self.w.checkBoxDeleteUnnecessaryGlyphs.get(),
                 "glyphsNames": self.w.textEditGlyphsNames.get().strip().lstrip('.')
             }
         }
@@ -88,24 +88,41 @@ class AppWorker:
     def __init__(self):
         pass
 
-    def printLog(self,message):
+    def printLog(self, message, addLine):
         self.outputLog += message + '\n'
+        #if addLine == True:
+            #self.outputLog += '\n'
+        #    print message
+        #else:
         print message
+
 
     def removeCustomParameter(self, font, key):
         del(font.customParameters[key])
 
     def processFont(self, font, onlySelected, options):
 
+        fontHasConfig = False
+
         glyphs_total = len(font.glyphs)
         message = '# Proccesing font: ' + font.familyName + ' (contains %s glyphs)' % glyphs_total
-        self.printLog(message)
+        self.printLog(message, True)
+
+        #configFile = os.path.splitext(font.filepath)[0]+'.json'
+        #if os.path.isfile(new_filename) and os.access(new_filename, os.R_OK):
+        #    print "- font has json file attached."
+        #    json_file = open(new_filename).read()
+        #    json_data = json.loads(json_file)
+        #    fontHasConfig = True
+        #else:
+        #    json_data = {}
+        #    print "- there is NO json file attached to the font. Some steps may be skipped for that reason."
 
         if options["UpdateGlyphInfo"]:
             if font.disablesNiceNames:
-                self.printLog('-- WARNING: Can not run Update Glyph Info. Use custom naming is on. You need to turn it off.')
+                self.printLog('-- WARNING: Can not run Update Glyph Info. Use custom naming is on. You need to turn it off.',False)
             else:
-                self.printLog('-- Updating all Glyphs Info (total %s)' % glyphs_total)
+                self.printLog('-- Updating all Glyphs Info (total %s)' % glyphs_total,False)
                 glyphsNames = []
                 for glyph in font.glyphs:
             	    glyphsNames.append(glyph.name)
@@ -116,24 +133,28 @@ class AppWorker:
 
         if options["RemoveGlyphOrder"]:
             if options["RemoveAllCustomParameters"]:
-                self.printLog('-- Skipping RemoveGlyphOrder > Remove All custom parametr is do it all')
+                self.printLog('-- Skipping RemoveGlyphOrder > Remove All custom parametr is do it all',False)
             elif Glyphs.font.customParameters["glyphOrder"]:
-                self.printLog('-- Removing custom glyph order')
-                self.removeCustomParameter(font,'glyphOrder')
-            else: self.printLog('-- No custom glyph order parameter.')
+                self.printLog('-- Removing custom glyph order',False)
+                self.removeCustomParameter(font,'glyphOrder',False)
+            else: self.printLog('-- No custom glyph order parameter.',False)
 
         if options["RemoveAllCustomParameters"]:
-            self.printLog('-- Removing all custom parameters')
+            self.printLog('-- Removing all custom parameters',False)
             parameters = []
             for customParameter in font.customParameters:
             	parameters.append(customParameter.name)
             if len(parameters) > 0:
                 for customParameter in parameters:
-                	self.printLog('--- Removing parameter %s' % customParameter)
+                	self.printLog('--- Removing parameter %s' % customParameter,False)
                 	self.removeCustomParameter(font,customParameter)
             else: print "--- No custom parameters found."
 
         #TODO: delete glyphs with given name
+        #if options["DeleteUnnecessaryGlyphs"]:
+        #    self.printLog('-- Removing Unnecessary Glyphs defined in attached file',False)
+        #    for uneccessary_glyph in json_data['Unnecessary Glyphs']:
+        #        print uneccessary_glyph
         #TODO: the other functionalities :-/
         #howtos forother functionalities
         # Add a glyph
@@ -150,15 +171,15 @@ class AppWorker:
     def start(self, settings):
 
         self.outputLog = ''
-        self.printLog('==== Starting ====')
+        self.printLog('==== Starting ====',True)
         if (settings['input'] == self.INPUT_SELECTED_CURRENT_FONT):
-            self.printLog("Only current font will be processed")
+            self.printLog("Only current font will be processed",True)
             self.processFont(Glyphs.font, True, settings['options'])
         elif (settings['input'] == self.INPUT_SELECTED_ALL_FONTS):
-            self.printLog("Processing all opened Fonts")
+            self.printLog("Processing all opened Fonts",True)
             for font in Glyphs.fonts:
                 self.processFont(font, True, settings['options'])
-        self.printLog('===== Done. =====')
+        self.printLog('===== Done. =====',False)
 
     def log(self, s):
 
