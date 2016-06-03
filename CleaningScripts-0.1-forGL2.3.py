@@ -163,7 +163,7 @@ class AppWorker:
                     print "---- removing %s" % uneccessary_glyph
                     del(font.glyphs[uneccessary_glyph])
                 else:
-                    print "---- not present in font %s" % uneccessary_glyph
+                    print "---- Unnecessary glyph not present in font: %s" % uneccessary_glyph
 
         #TODO: the other functionalities :-/
         #howtos forother functionalities
