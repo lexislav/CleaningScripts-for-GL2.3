@@ -153,7 +153,7 @@ class AppWorker:
                 for customParameter in parameters:
                 	self.printLog('--- Removing parameter %s' % customParameter,False)
                 	self.removeCustomParameter(font,customParameter)
-            else: self-printLog("--- No custom parameters found.",True)
+            else: self.printLog("--- No custom parameters found.",True)
 
 
         if options["DeleteUnnecessaryGlyphs"]:
