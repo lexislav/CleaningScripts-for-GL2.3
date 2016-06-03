@@ -166,7 +166,7 @@ class AppWorker:
                     countGlyphs += 1
                 else:
                     print "---- Unnecessary glyph not present in font: %s" % uneccessary_glyph
-            else: self.printLog("%s glyphs has been removed.",True)
+            else: self.printLog("%s glyphs has been removed." % countGlyphs,True)
 
         #TODO: the other functionalities :-/
         #howtos forother functionalities
