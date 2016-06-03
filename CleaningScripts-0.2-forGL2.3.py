@@ -37,8 +37,7 @@ class AppController:
         height += 20
 
         out.textOptions = vanilla.TextBox((15, height, 50, 14), "Options:", sizeStyle = 'regular')
-        out.checkBoxDeleteGlyphs = vanilla.CheckBox((80, height, -15, 19), "Delete glyphs: ", value = False, callback = self.updateWindow, sizeStyle = 'regular')
-        out.textEditGlyphsNames = vanilla.EditText((80 + 120, height + 1, -15, 22), placeholder = "glyphname,glyphname", readOnly = True, sizeStyle = 'regular')
+        out.checkBoxDeleteGlyphs = vanilla.CheckBox((80, height, -15, 19), "Delete Unnecessary Glyphs: ", value = False, sizeStyle = 'regular')
         height += 19
 
         out.buttonProcess = vanilla.Button((-15 - 80, -15 - 20, -15, -15), "Process", sizeStyle = 'regular', callback=self.process)
@@ -48,8 +47,8 @@ class AppController:
 
         return out
 
-    def updateWindow(self, sender):
-        self.w.textEditGlyphsNames._nsObject.setEditable_(self.w.checkBoxDeleteGlyphs.get())
+    #def updateWindow(self, sender):
+    #    self.w.textEditGlyphsNames._nsObject.setEditable_(self.w.checkBoxDeleteGlyphs.get())
 
     def getSettings(self):
         out = {
