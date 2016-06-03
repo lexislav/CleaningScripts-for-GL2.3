@@ -112,18 +112,19 @@ class AppWorker:
 
 
         configFile = os.path.splitext(font.filepath)[0]+'.json'
-        if os.path.isfile(new_filename) and os.access(new_filename, os.R_OK):
-            print "- font has json file attached."
-            json_file = open(new_filename).read()
+        if os.path.isfile(configFile) and os.access(configFile, os.R_OK):
+            self.printLog("-- font has json file attached.",True)
+            json_file = open(configFile).read()
             json_data = json.loads(json_file)
             fontHasConfig = True
         else:
             json_data = {}
-            print "- there is NO json file attached to the font. Some steps may be skipped for that reason."
+            self.printLog("-- there is NO json file attached to the font. Some steps may be skipped for that reason.",True)
+
 
         if options["UpdateGlyphInfo"]:
             if font.disablesNiceNames:
-                self.printLog('-- WARNING: Can not run Update Glyph Info. Use custom naming is on. You need to turn it off.',False)
+                self.printLog('-- WARNING: Can not run Update Glyph Info. Use custom naming is on. You need to turn it off.',True)
             else:
                 self.printLog('-- Updating all Glyphs Info (total %s)' % glyphs_total,False)
                 glyphsNames = []
@@ -136,11 +137,12 @@ class AppWorker:
 
         if options["RemoveGlyphOrder"]:
             if options["RemoveAllCustomParameters"]:
-                self.printLog('-- Skipping RemoveGlyphOrder > Remove All custom parametr is do it all',False)
+                self.printLog('-- Skipping RemoveGlyphOrder > Remove All custom parametr is do it all',True)
             elif Glyphs.font.customParameters["glyphOrder"]:
                 self.printLog('-- Removing custom glyph order',False)
                 self.removeCustomParameter(font,'glyphOrder',False)
             else: self.printLog('-- No custom glyph order parameter.',False)
+
 
         if options["RemoveAllCustomParameters"]:
             self.printLog('-- Removing all custom parameters',False)
@@ -151,13 +153,18 @@ class AppWorker:
                 for customParameter in parameters:
                 	self.printLog('--- Removing parameter %s' % customParameter,False)
                 	self.removeCustomParameter(font,customParameter)
-            else: print "--- No custom parameters found."
+            else: self-printLog("--- No custom parameters found.",True)
 
-        #TODO: delete glyphs with given name
-        #if options["DeleteUnnecessaryGlyphs"]:
-        #    self.printLog('-- Removing Unnecessary Glyphs defined in attached file',False)
-        #    for uneccessary_glyph in json_data['Unnecessary Glyphs']:
-        #        print uneccessary_glyph
+
+        if options["DeleteUnnecessaryGlyphs"]:
+            self.printLog('-- Removing Unnecessary Glyphs defined in attached file',False)
+            for uneccessary_glyph in json_data['Unnecessary Glyphs']:
+                if font.glyphs[uneccessary_glyph]:
+                    print "---- removing %s" % uneccessary_glyph
+                    del(font.glyphs[uneccessary_glyph])
+                else:
+                    print "---- not present in font %s" % uneccessary_glyph
+
         #TODO: the other functionalities :-/
         #howtos forother functionalities
         # Add a glyph
@@ -167,7 +174,7 @@ class AppWorker:
         #newGlyph.name = 'A.alt'
         #font.glyphs.append(newGlyph)
         # Delete a glyph
-        #del(font.glyphs['A.alt'])
+
 
         return True
 
@@ -176,10 +183,10 @@ class AppWorker:
         self.outputLog = ''
         self.printLog('==== Starting ====',False)
         if (settings['input'] == self.INPUT_SELECTED_CURRENT_FONT):
-            self.printLog("Only current font will be processed",True)
+            self.printLog("NOTE: Only current font will be processed",True)
             self.processFont(Glyphs.font, True, settings['options'])
         elif (settings['input'] == self.INPUT_SELECTED_ALL_FONTS):
-            self.printLog("Processing all opened Fonts",True)
+            self.printLog("NOTE: Processing all opened Fonts",True)
             for font in Glyphs.fonts:
                 self.processFont(font, True, settings['options'])
         self.printLog('===== Done. =====',False)
