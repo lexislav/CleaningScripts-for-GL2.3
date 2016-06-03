@@ -158,12 +158,15 @@ class AppWorker:
 
         if options["DeleteUnnecessaryGlyphs"]:
             self.printLog('-- Removing Unnecessary Glyphs defined in attached file',False)
+            countGlyphs = 0
             for uneccessary_glyph in json_data['Unnecessary Glyphs']:
                 if font.glyphs[uneccessary_glyph]:
                     print "---- removing %s" % uneccessary_glyph
                     del(font.glyphs[uneccessary_glyph])
+                    countGlyphs += 1
                 else:
                     print "---- Unnecessary glyph not present in font: %s" % uneccessary_glyph
+            else: self.printLog("%s glyphs has been removed.",True)
 
         #TODO: the other functionalities :-/
         #howtos forother functionalities
