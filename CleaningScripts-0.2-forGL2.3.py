@@ -1,6 +1,7 @@
 #MenuTitle: Cleaning Scripts 0.2 for GL2.3
 
 import vanilla
+import json
 
 class AppController:
 
