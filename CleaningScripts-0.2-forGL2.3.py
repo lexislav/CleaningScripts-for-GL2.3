@@ -57,8 +57,7 @@ class AppController:
                 "UpdateGlyphInfo": self.w.checkBoxUpdateGlyphInfo.get(),
                 "RemoveGlyphOrder": self.w.checkBoxRemoveGlyphOrder.get(),
                 "RemoveAllCustomParameters": self.w.checkBoxRemoveAllCustomParameters.get(),
-                "DeleteUnnecessaryGlyphs": self.w.checkBoxDeleteUnnecessaryGlyphs.get(),
-                "glyphsNames": self.w.textEditGlyphsNames.get().strip().lstrip('.')
+                "DeleteUnnecessaryGlyphs": self.w.checkBoxDeleteUnnecessaryGlyphs.get()
             }
         }
 
@@ -90,11 +89,11 @@ class AppWorker:
 
     def printLog(self, message, addLine):
         self.outputLog += message + '\n'
-        #if addLine == True:
-            #self.outputLog += '\n'
-        #    print message
-        #else:
-        print message
+        if addLine == True:
+            self.outputLog += '\n'
+            print message + '\n'
+        else:
+            print message
 
 
     def removeCustomParameter(self, font, key):
@@ -106,17 +105,21 @@ class AppWorker:
 
         glyphs_total = len(font.glyphs)
         message = '# Proccesing font: ' + font.familyName + ' (contains %s glyphs)' % glyphs_total
+        messlength = len(message)
+        self.printLog(message, False)
+        message = '-' * messlength
         self.printLog(message, True)
 
-        #configFile = os.path.splitext(font.filepath)[0]+'.json'
-        #if os.path.isfile(new_filename) and os.access(new_filename, os.R_OK):
-        #    print "- font has json file attached."
-        #    json_file = open(new_filename).read()
-        #    json_data = json.loads(json_file)
-        #    fontHasConfig = True
-        #else:
-        #    json_data = {}
-        #    print "- there is NO json file attached to the font. Some steps may be skipped for that reason."
+
+        configFile = os.path.splitext(font.filepath)[0]+'.json'
+        if os.path.isfile(new_filename) and os.access(new_filename, os.R_OK):
+            print "- font has json file attached."
+            json_file = open(new_filename).read()
+            json_data = json.loads(json_file)
+            fontHasConfig = True
+        else:
+            json_data = {}
+            print "- there is NO json file attached to the font. Some steps may be skipped for that reason."
 
         if options["UpdateGlyphInfo"]:
             if font.disablesNiceNames:
@@ -171,7 +174,7 @@ class AppWorker:
     def start(self, settings):
 
         self.outputLog = ''
-        self.printLog('==== Starting ====',True)
+        self.printLog('==== Starting ====',False)
         if (settings['input'] == self.INPUT_SELECTED_CURRENT_FONT):
             self.printLog("Only current font will be processed",True)
             self.processFont(Glyphs.font, True, settings['options'])
