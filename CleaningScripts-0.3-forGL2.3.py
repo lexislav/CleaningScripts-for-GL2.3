@@ -1,4 +1,4 @@
-#MenuTitle: Cleaning Scripts 0.2 for GL2.3
+#MenuTitle: Cleaning Scripts 0.3 for GL2.3
 
 import vanilla
 import os
@@ -33,6 +33,8 @@ class AppController:
         height += 19
         out.checkBoxRemoveAllCustomParameters = vanilla.CheckBox((80, height, -15, 19), "Remove all custom parameters", value=False, sizeStyle = 'regular')
         height += 19
+        out.checkBoxAddSuffixesToLigatures = vanilla.CheckBox((80, height, -15, 19), "Add suffixes to ligatures", value=False, sizeStyle = 'regular')
+        height += 19
 
         height += 20
 
@@ -57,6 +59,7 @@ class AppController:
                 "UpdateGlyphInfo": self.w.checkBoxUpdateGlyphInfo.get(),
                 "RemoveGlyphOrder": self.w.checkBoxRemoveGlyphOrder.get(),
                 "RemoveAllCustomParameters": self.w.checkBoxRemoveAllCustomParameters.get(),
+                "AddSuffixesToLigatures": self.w.checkBoxAddSuffixesToLigatures.get(),
                 "DeleteUnnecessaryGlyphs": self.w.checkBoxDeleteUnnecessaryGlyphs.get()
             }
         }
@@ -154,6 +157,10 @@ class AppWorker:
                 	self.printLog('--- Removing parameter %s' % customParameter,False)
                 	self.removeCustomParameter(font,customParameter)
             else: self.printLog("--- No custom parameters found.",True)
+
+        if option["AddSuffixesToLigatures"]:
+            self.printLog('-- Adding suffixes to ligatures',False)
+            
 
 
         if options["DeleteUnnecessaryGlyphs"]:

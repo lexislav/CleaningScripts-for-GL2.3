@@ -7,7 +7,6 @@
 		"hlig": ["longs_i"]
 	}],
 
-	"Remove unnecessary glyphs": [{
-		"Unnecessary Glyphs": ["NULL", ".null"]
-	}]
+	"Unnecessary Glyphs": ["NULL", ".null"]
+
 }
