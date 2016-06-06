@@ -16,7 +16,7 @@ class AppController:
 
     def getWindow(self):
 
-        out = vanilla.FloatingWindow((310, 305), "Cleaning Scripts v0.2")
+        out = vanilla.FloatingWindow((310, 305), "Cleaning Scripts v0.3")
 
         height = 20
 
@@ -158,9 +158,25 @@ class AppWorker:
                 	self.removeCustomParameter(font,customParameter)
             else: self.printLog("--- No custom parameters found.",True)
 
-        if option["AddSuffixesToLigatures"]:
+
+        if options["AddSuffixesToLigatures"]:
             self.printLog('-- Adding suffixes to ligatures',False)
-            
+            countGlyphs = 0
+            for ligature in json_data['Suffixes for ligatures']:
+                key = ligature.keys()[0]
+                ligatureGlyphsString = ", ".join(ligature[key])
+            	print "--- %s: checking existence of glyphs %s" % (key, ligatureGlyphsString)
+                for lglyphName in ligature[key]:
+                    if font.glyphs[lglyphName]:
+                        newName = lglyphName + "." + key
+                        print "------ %s found and will be renamed to %s" % (lglyphName, newName)
+                        font.glyphs[lglyphName].name = newName
+                        countGlyphs += 1
+            else:
+                message = "-- Defined suffixes added to %s glyphs." % countGlyphs
+                self.printLog(message,True)
+
+
 
 
         if options["DeleteUnnecessaryGlyphs"]:
