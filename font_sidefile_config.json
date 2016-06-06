@@ -1,3 +1,13 @@
 {
-	"Unnecessary Glyphs": ["NULL", ".null"]
+	"Suffixes for ligatures": [{
+		"liga": ["f_i", "f_l", "f_f_i"]
+	}, {
+		"dlig": ["T_h", "f_t"]
+	}, {
+		"hlig": ["longs_i"]
+	}],
+
+	"Remove unnecessary glyphs": [{
+		"Unnecessary Glyphs": ["NULL", ".null"]
+	}]
 }
