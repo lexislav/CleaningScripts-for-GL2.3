@@ -102,6 +102,13 @@ class AppWorker:
     def removeCustomParameter(self, font, key):
         del(font.customParameters[key])
 
+    def is_json(self, myjson):
+        try:
+            json_object = json.loads(myjson)
+        except ValueError, e:
+            return False
+        return True
+
     def processFont(self, font, onlySelected, options):
 
         fontHasConfig = False
@@ -116,13 +123,18 @@ class AppWorker:
 
         configFile = os.path.splitext(font.filepath)[0]+'.json'
         if os.path.isfile(configFile) and os.access(configFile, os.R_OK):
-            self.printLog("-- font has json file attached.",True)
-            json_file = open(configFile).read()
-            json_data = json.loads(json_file)
-            fontHasConfig = True
+                json_file = open(configFile).read()
+                if self.is_json(json_file) == True:
+                    json_data = json.loads(json_file)
+                    fontHasConfig = True
+                    self.printLog("-- font has json file attached and file seems OK.",True)
+                else:
+                    fontHasConfig = False
+                    self.printLog("-- WARNING: font has json file attached but file is not valid json. Some actions may be skipped",True)
         else:
             json_data = {}
             self.printLog("-- there is NO json file attached to the font. Some steps may be skipped for that reason.",True)
+
 
 
         if options["UpdateGlyphInfo"]:
@@ -160,36 +172,43 @@ class AppWorker:
 
 
         if options["AddSuffixesToLigatures"]:
-            self.printLog('-- Adding suffixes to ligatures',False)
-            countGlyphs = 0
-            for ligature in json_data['Suffixes for ligatures']:
-                key = ligature.keys()[0]
-                ligatureGlyphsString = ", ".join(ligature[key])
-            	print "--- %s: checking existence of glyphs %s" % (key, ligatureGlyphsString)
-                for lglyphName in ligature[key]:
-                    if font.glyphs[lglyphName]:
-                        newName = lglyphName + "." + key
-                        print "------ %s found and will be renamed to %s" % (lglyphName, newName)
-                        font.glyphs[lglyphName].name = newName
-                        countGlyphs += 1
+            if fontHasConfig == True and json_data['Suffixes for ligatures']:
+                self.printLog('-- Adding suffixes to ligatures',False)
+                countGlyphs = 0
+                for ligature in json_data['Suffixes for ligatures']:
+                    key = ligature.keys()[0]
+                    ligatureGlyphsString = ", ".join(ligature[key])
+                    print "--- %s: checking existence of glyphs %s" % (key, ligatureGlyphsString)
+                    for lglyphName in ligature[key]:
+                        if font.glyphs[lglyphName]:
+                            newName = lglyphName + "." + key
+                            print "------ %s found and will be renamed to %s" % (lglyphName, newName)
+                            font.glyphs[lglyphName].name = newName
+                            countGlyphs += 1
+                else:
+                    message = "-- Defined suffixes added to %s glyphs." % countGlyphs
+                    self.printLog(message,True)
             else:
-                message = "-- Defined suffixes added to %s glyphs." % countGlyphs
-                self.printLog(message,True)
+                self.printLog('-- Adding suffixes to ligatures skipped for missing or corrupted json config file',False)
+
 
 
 
 
         if options["DeleteUnnecessaryGlyphs"]:
-            self.printLog('-- Removing Unnecessary Glyphs defined in attached file',False)
-            countGlyphs = 0
-            for uneccessary_glyph in json_data['Unnecessary Glyphs']:
-                if font.glyphs[uneccessary_glyph]:
-                    print "---- removing %s" % uneccessary_glyph
-                    del(font.glyphs[uneccessary_glyph])
-                    countGlyphs += 1
-                else:
-                    print "---- Unnecessary glyph not present in font: %s" % uneccessary_glyph
-            else: self.printLog("%s glyphs has been removed." % countGlyphs,True)
+            if fontHasConfig == True and json_data['Unnecessary Glyphs']:
+                self.printLog('-- Removing Unnecessary Glyphs defined in attached file',False)
+                countGlyphs = 0
+                for uneccessary_glyph in json_data['Unnecessary Glyphs']:
+                    if font.glyphs[uneccessary_glyph]:
+                        print "---- removing %s" % uneccessary_glyph
+                        del(font.glyphs[uneccessary_glyph])
+                        countGlyphs += 1
+                    else:
+                        print "---- Unnecessary glyph not present in font: %s" % uneccessary_glyph
+                else: self.printLog("%s glyphs has been removed." % countGlyphs,True)
+            else:
+                self.printLog('-- Removing Unnecessary Glyphs skipped for missing or corrupted json config file',False)
 
         #TODO: the other functionalities :-/
         #howtos forother functionalities
