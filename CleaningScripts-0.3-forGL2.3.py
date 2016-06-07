@@ -1,4 +1,4 @@
-#MenuTitle: Cleaning Scripts 0.3 for GL2.3
+#MenuTitle: Cleaning Scripts 0.4 for GL2.3
 
 import vanilla
 import os
@@ -16,7 +16,7 @@ class AppController:
 
     def getWindow(self):
 
-        out = vanilla.FloatingWindow((310, 305), "Cleaning Scripts v0.3")
+        out = vanilla.FloatingWindow((310, 305), "Cleaning Scripts v0.4")
 
         height = 20
 
@@ -190,8 +190,6 @@ class AppWorker:
                     self.printLog(message,True)
             else:
                 self.printLog('-- Adding suffixes to ligatures skipped for missing or corrupted json config file',False)
-
-
 
 
 
