@@ -143,11 +143,13 @@ class AppWorker:
             else:
                 self.printLog('-- Updating all Glyphs Info (total %s)' % glyphs_total,False)
                 glyphsNames = []
+                Font.disableUpdateInterface()
                 for glyph in font.glyphs:
             	    glyphsNames.append(glyph.name)
                 for glyphName in glyphsNames:
                     print "---updating %s" % glyphName
             	    font.glyphs[glyphName].updateGlyphInfo()
+                Font.enableUpdateInterface()
 
 
         if options["RemoveGlyphOrder"]:
