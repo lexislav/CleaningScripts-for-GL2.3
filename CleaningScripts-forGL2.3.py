@@ -87,6 +87,14 @@ class AppWorker:
 
     outputLog = None
 
+    fontHasConfig = False
+    generalConfigExists = False
+    generalConfigData = None
+
+    # Setting variables
+    configFile = ""
+    generalConfigFile = ""
+
     def __init__(self):
         pass
 
@@ -102,6 +110,12 @@ class AppWorker:
     def removeCustomParameter(self, font, key):
         del(font.customParameters[key])
 
+    def file_is_ok(self, filePath):
+        if os.path.isfile(filePath) and os.access(filePath, os.R_OK):
+            return True
+        else:
+            return False
+
     def is_json(self, myjson):
         try:
             json_object = json.loads(myjson)
@@ -109,9 +123,10 @@ class AppWorker:
             return False
         return True
 
-    def processFont(self, font, onlySelected, options):
+    def get_json_data(self, myjson):
+        return json.loads(myjson)
 
-        fontHasConfig = False
+    def processFont(self, font, onlySelected, options):
 
         glyphs_total = len(font.glyphs)
         message = '# Proccesing font: ' + font.familyName + ' (contains %s glyphs)' % glyphs_total
@@ -120,20 +135,29 @@ class AppWorker:
         message = '-' * messlength
         self.printLog(message, True)
 
-
         configFile = os.path.splitext(font.filepath)[0]+'.json'
-        if os.path.isfile(configFile) and os.access(configFile, os.R_OK):
+
+        if self.file_is_ok(configFile) == True:
                 json_file = open(configFile).read()
                 if self.is_json(json_file) == True:
-                    json_data = json.loads(json_file)
-                    fontHasConfig = True
+                    json_data = self.get_json_data(json_file)
+                    self.fontHasConfig = True
+                    self.fontHasConfig = True
                     self.printLog("-- font has json file attached and file seems OK.",True)
                 else:
-                    fontHasConfig = False
+                    self.fontHasConfig = False
+                    self.fontHasConfig = False
                     self.printLog("-- WARNING: font has json file attached but file is not valid json. Some actions may be skipped",True)
+        elif self.generalConfigExists:
+            self.fontHasConfig = True
+            self.fontHasConfig = True
+            json_data = self.generalConfigData
+            self.printLog("-- there is NO json file attached to the font. General script config will be used instead.",True)
         else:
-            json_data = {}
-            self.printLog("-- there is NO json file attached to the font. Some steps may be skipped for that reason.",True)
+            self.fontHasConfig = False
+            self.fontHasConfig = False
+            json_data = None
+            self.printLog("-- there is NO json file attached to the font or to the script. Some steps may be skipped for that reason.",True)
 
 
 
@@ -174,7 +198,7 @@ class AppWorker:
 
 
         if options["AddSuffixesToLigatures"]:
-            if fontHasConfig == True and json_data['Suffixes for ligatures']:
+            if self.fontHasConfig == True and json_data['Suffixes for ligatures']:
                 self.printLog('-- Adding suffixes to ligatures',False)
                 countGlyphs = 0
                 for ligature in json_data['Suffixes for ligatures']:
@@ -196,7 +220,7 @@ class AppWorker:
 
 
         if options["DeleteUnnecessaryGlyphs"]:
-            if fontHasConfig == True and json_data['Unnecessary Glyphs']:
+            if self.fontHasConfig == True and json_data['Unnecessary Glyphs']:
                 self.printLog('-- Removing Unnecessary Glyphs defined in attached file',False)
                 countGlyphs = 0
                 for uneccessary_glyph in json_data['Unnecessary Glyphs']:
@@ -225,9 +249,27 @@ class AppWorker:
 
     def start(self, settings):
 
+        generalConfigFile = os.path.splitext(os.path.realpath("CleaningScripts_forGL2.3.py"))[0]+'.json'
+
         self.outputLog = ''
         self.printLog('==== Starting ====',False)
-        if (settings['input'] == self.INPUT_SELECTED_CURRENT_FONT):
+
+        # Get general config. JSON should be located side by side with sript file.
+        if self.file_is_ok(generalConfigFile) == True:
+            json_file = open(generalConfigFile).read()
+            if self.is_json(json_file) == True:
+                self.generalConfigExists = True
+                self.generalConfigData = self.get_json_data(json_file)
+                self.printLog("NOTE: General json config found. It will be used when font config is not present.",True)
+            else:
+                self.generalConfigExists = False
+                self.generalConfigData = None
+                self.printLog("WARNING: General json config found. But it's not a valid JSON file and cann't be used.",True)
+        else:
+            self.generalConfigExists = False
+            self.generalConfigData = None
+
+        if (settings['input'] == self.fontHasConfig):
             self.printLog("NOTE: Only current font will be processed",True)
             self.processFont(Glyphs.font, True, settings['options'])
         elif (settings['input'] == self.INPUT_SELECTED_ALL_FONTS):
