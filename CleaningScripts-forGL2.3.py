@@ -249,7 +249,7 @@ class AppWorker:
 
     def start(self, settings):
 
-        generalConfigFile = os.path.splitext(os.path.realpath("CleaningScripts_forGL2.3.py"))[0]+'.json'
+        generalConfigFile = os.path.split(os.path.realpath("CleaningScripts_forGL2.3.py"))[0]+'/cleaningscripts_config.json'
 
         self.outputLog = ''
         self.printLog('==== Starting ====',False)
