@@ -1,5 +1,5 @@
 #MenuTitle: Cleaning Scripts 0.4 for GL2.3
-# encoding: utf-8
+#encoding: utf-8
 """
 CleaningScripts-forGL2.3.py
 Created by Alexandr Hudeček on 2016-06-16.
