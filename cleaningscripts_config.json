@@ -7,5 +7,19 @@
 		"hlig": ["longs_i"]
 	}],
 
+    "Rename Individual Glyphs": [{
+		"liter": ["afii61289", "uni2113"]
+	}, {
+		"iacute_jacute": ["iacute_j.loclNLD"]
+	}, {
+		"published": ["publish"]
+	}, {
+		"f_i": ["fi"]
+	}, {
+		"acute.case": ["Acute"]
+	}, {
+		"caron.case": ["Caron"]
+	}],
+
 	"Unnecessary Glyphs": ["NULL", ".null"]
 }
