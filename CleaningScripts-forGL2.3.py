@@ -268,7 +268,7 @@ class AppWorker:
             if len(classes) > 0:
                 for singleClass in classes:
                     self.printLog('--- Removing class %s' % singleClass,False)
-                    del(font.classes[signleClass])
+                    del(font.classes[singleClass])
                 else:
                     self.printLog('',True)
             else: self.printLog("--- No OpenType classes found.",True)
