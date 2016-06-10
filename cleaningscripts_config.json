@@ -1,4 +1,14 @@
 {
+    "Rename suffixes": [{
+        ".sc": [".small", ".smcp", ".sc"]
+    }, {
+        ".swsh": [".swash"]
+    }, {
+        ".sinf": [".inferior"]
+    }, {
+        ".sups": [".superior"]
+    }],
+
 	"Suffixes for ligatures": [{
 		"liga": ["f_i", "f_l", "f_f_i"]
 	}, {
