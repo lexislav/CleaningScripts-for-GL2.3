@@ -1,4 +1,4 @@
-#MenuTitle: Cleaning Scripts 0.4 for GL2.3
+#MenuTitle: Cleaning Scripts 0.5 for GL2.3
 #encoding: utf-8
 """
 CleaningScripts-forGL2.3.py
@@ -22,7 +22,7 @@ class AppController:
 
     def getWindow(self):
 
-        out = vanilla.FloatingWindow((310, 305), "Cleaning Scripts v0.4")
+        out = vanilla.FloatingWindow((355, 305), "Cleaning Scripts v0.5")
 
         height = 20
 
@@ -39,9 +39,11 @@ class AppController:
         height += 19
         out.checkBoxRemoveAllCustomParameters = vanilla.CheckBox((80, height, -15, 19), "Remove all custom parameters", value=False, sizeStyle = 'regular')
         height += 19
-        out.checkBoxRemoveAllMastersCustomParameters = vanilla.CheckBox((80, height, -15, 19), "Remove all master custom parameters", value=False, sizeStyle = 'regular')
+        out.checkBoxRemoveAllMastersCustomParameters = vanilla.CheckBox((80, height, -15, 19), "Remove all masters custom parameters", value=False, sizeStyle = 'regular')
         height += 19
         out.checkBoxAddSuffixesToLigatures = vanilla.CheckBox((80, height, -15, 19), "Add suffixes to ligatures", value=False, sizeStyle = 'regular')
+        height += 19
+        out.checkBoxRemoveAllFeatures = vanilla.CheckBox((80, height, -15, 19), "Remove all OpenType features, classes, prefixes", value=False, sizeStyle = 'regular')
         height += 19
 
         height += 20
@@ -69,6 +71,7 @@ class AppController:
                 "RemoveAllCustomParameters": self.w.checkBoxRemoveAllCustomParameters.get(),
                 "RemoveAllMastersCustomParameters": self.w.checkBoxRemoveAllMastersCustomParameters.get(),
                 "AddSuffixesToLigatures": self.w.checkBoxAddSuffixesToLigatures.get(),
+                "RemoveAllFeatures": self.w.checkBoxRemoveAllFeatures.get(),
                 "DeleteUnnecessaryGlyphs": self.w.checkBoxDeleteUnnecessaryGlyphs.get()
             }
         }
@@ -203,6 +206,7 @@ class AppWorker:
                 for customParameter in parameters:
                 	self.printLog('--- Removing parameter %s' % customParameter,False)
                 	self.removeCustomParameter(font,customParameter)
+                else: self.printLog('',True)
             else: self.printLog("--- No custom parameters found.",True)
 
 
@@ -241,6 +245,44 @@ class AppWorker:
                     self.printLog(message,True)
             else:
                 self.printLog('-- Adding suffixes to ligatures skipped for missing or corrupted json config file',False)
+
+
+
+        if options["RemoveAllFeatures"]:
+            self.printLog('-- Removing all OpenType features, classes, prefixes',False)
+
+            features = []
+            for feature in font.features:
+                features.append(feature.name)
+            if len(features) > 0:
+                for feature in features:
+                    self.printLog('--- Removing feature %s' % feature,False)
+                    del(font.features[feature])
+                else:
+                    self.printLog('',True)
+            else: self.printLog("--- No OpenType features found.",True)
+
+            classes = []
+            for singleClass in font.classes:
+                classes.append(singleClass.name)
+            if len(classes) > 0:
+                for singleClass in classes:
+                    self.printLog('--- Removing class %s' % singleClass,False)
+                    del(font.classes[signleClass])
+                else:
+                    self.printLog('',True)
+            else: self.printLog("--- No OpenType classes found.",True)
+
+            featurePrefixes = []
+            for featurePrefix in font.featurePrefixes:
+                featurePrefixes.append(featurePrefix.name)
+            if len(featurePrefixes) > 0:
+                for featurePrefix in featurePrefixes:
+                    self.printLog('--- Removing feature prefix %s' % featurePrefix,False)
+                    del(font.featurePrefixes[featurePrefix])
+                else:
+                    self.printLog('',True)
+            else: self.printLog("--- No OpenType feature prefixes found.",True)
 
 
 

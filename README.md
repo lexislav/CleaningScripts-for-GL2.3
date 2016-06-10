@@ -30,5 +30,11 @@ Search for Unnecessary glyphs defined in file and remove them from font.
 
 ## Changelog
 
+#### 0.5
+Added featurs:
+- Remove all masters custom parameters
+- Remove all OpenType classes, features and feature prefixes from the font
+- fixed some bugs
+
 #### 0.4
 Added general config json file to script. Script loads that config. When no config related to specific font is located, general config is used instead.
