@@ -1,4 +1,4 @@
-#MenuTitle: Compare Two Glyphs
+#MenuTitle: Compare Two (selected) Glyphs
 # -*- coding: utf-8 -*-
 __doc__="""
 Will compare two selected glyphs.
