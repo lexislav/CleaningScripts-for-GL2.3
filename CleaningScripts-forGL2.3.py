@@ -275,11 +275,28 @@ class AppWorker:
 
 
         if options["RenameSuffixes"]:
+            """
+            NOTE: Skript  přejmenuje koncovky.
+            Databáze bude obsahovat 1. seznam možných koncovek (small, sm, sc, smcp)
+            2. novou koncovku, která bude pouze jedna a bude odpovídat požadavkům Glyphsapp, tedy sc.
+            V případě, že dojde ke zdvojení, např. pokud by uživatel z A.sc udělal a.smcp a z a.sc taky
+             druhá sada by dostala koncovku a.smcp.001.
+            """
             pass
 
 
 
         if options["RenameIndividualGlyphs"]:
+            """
+            NOTE: Ručně vytvořený seznam záměn název za název.
+            Některé stejné glyfy mohou být mít různé názvy, např. liter může být afii61289 i uni2113,
+            v takovém případě bude výsledkem litter a litter.001.
+            Čili je to množina názvů před, jeden název po.
+            """
+            """
+            pro liter: hledej alternativy, sestav list znaků na přejmenování.
+            přejmnuj seznam
+            """
             pass
 
 
