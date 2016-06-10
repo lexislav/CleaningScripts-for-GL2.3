@@ -22,7 +22,7 @@ class AppController:
 
     def getWindow(self):
 
-        out = vanilla.FloatingWindow((405, 305), "Cleaning Scripts v0.6")
+        out = vanilla.FloatingWindow((355, 335), "Cleaning Scripts v0.6")
 
         height = 20
 
@@ -37,19 +37,23 @@ class AppController:
         height += 19
         out.checkBoxAddSuffixesToLigatures = vanilla.CheckBox((80, height, -15, 19), "Add suffixes to ligatures", value=False, sizeStyle = 'regular')
         height += 19
+        out.checkBoxRenameSuffixes = vanilla.CheckBox((80, height, -15, 19), "Rename suffixes", value=False, sizeStyle = 'regular')
+        height += 19
+        out.checkBoxRenameIndividualGlyphs = vanilla.CheckBox((80, height, -15, 19), "Rename individual glyphs", value=False, sizeStyle = 'regular')
+        height += 19
 
         height += 20
 
         out.textOptions = vanilla.TextBox((15, height, 80, 20), "Remove:", sizeStyle = 'regular')
         out.checkBoxDeleteUnnecessaryGlyphs = vanilla.CheckBox((80, height, -15, 19), "Delete Unnecessary Glyphs", value = False, sizeStyle = 'regular')
         height += 19
-        out.checkBoxRemoveGlyphOrder = vanilla.CheckBox((80, height, -15, 19), "Remove original glyph order ", value=False, sizeStyle = 'regular')
+        out.checkBoxRemoveGlyphOrder = vanilla.CheckBox((80, height, -15, 19), "original glyph order ", value=False, sizeStyle = 'regular')
         height += 19
-        out.checkBoxRemoveAllCustomParameters = vanilla.CheckBox((80, height, -15, 19), "Remove all custom parameters", value=False, sizeStyle = 'regular')
+        out.checkBoxRemoveAllCustomParameters = vanilla.CheckBox((80, height, -15, 19), "all custom parameters", value=False, sizeStyle = 'regular')
         height += 19
-        out.checkBoxRemoveAllMastersCustomParameters = vanilla.CheckBox((80, height, -15, 19), "Remove all masters custom parameters", value=False, sizeStyle = 'regular')
+        out.checkBoxRemoveAllMastersCustomParameters = vanilla.CheckBox((80, height, -15, 19), "all masters custom parameters", value=False, sizeStyle = 'regular')
         height += 19
-        out.checkBoxRemoveAllFeatures = vanilla.CheckBox((80, height, -15, 19), "Remove all OpenType features, classes, prefixes", value=False, sizeStyle = 'regular')
+        out.checkBoxRemoveAllFeatures = vanilla.CheckBox((80, height, -15, 19), "all OpenType features, classes, prefixes", value=False, sizeStyle = 'regular')
         height += 19
 
         out.buttonProcess = vanilla.Button((-15 - 80, -15 - 20, -15, -15), "Process", sizeStyle = 'regular', callback=self.process)
@@ -71,6 +75,8 @@ class AppController:
                 "RemoveAllCustomParameters": self.w.checkBoxRemoveAllCustomParameters.get(),
                 "RemoveAllMastersCustomParameters": self.w.checkBoxRemoveAllMastersCustomParameters.get(),
                 "AddSuffixesToLigatures": self.w.checkBoxAddSuffixesToLigatures.get(),
+                "RenameSuffixes": self.w.checkBoxRenameSuffixes.get(),
+                "RenameIndividualGlyphs": self.w.checkBoxRenameIndividualGlyphs.get(),
                 "RemoveAllFeatures": self.w.checkBoxRemoveAllFeatures.get(),
                 "DeleteUnnecessaryGlyphs": self.w.checkBoxDeleteUnnecessaryGlyphs.get()
             }
@@ -92,6 +98,7 @@ class AppController:
         log.open()
 
 
+
 class AppWorker:
 
     INPUT_SELECTED_CURRENT_FONT = 0
@@ -107,8 +114,12 @@ class AppWorker:
     configFile = ""
     generalConfigFile = ""
 
+
+
     def __init__(self):
         pass
+
+
 
     def printLog(self, message, addLine):
         self.outputLog += message + '\n'
@@ -119,14 +130,19 @@ class AppWorker:
             print message
 
 
+
     def removeCustomParameter(self, font, key):
         del(font.customParameters[key])
+
+
 
     def file_is_ok(self, filePath):
         if os.path.isfile(filePath) and os.access(filePath, os.R_OK):
             return True
         else:
             return False
+
+
 
     def is_json(self, myjson):
         try:
@@ -135,8 +151,12 @@ class AppWorker:
             return False
         return True
 
+
+
     def get_json_data(self, myjson):
         return json.loads(myjson)
+
+
 
     def processFont(self, font, onlySelected, options):
 
@@ -148,6 +168,8 @@ class AppWorker:
         self.printLog(message, True)
 
         configFile = os.path.splitext(font.filepath)[0]+'.json'
+
+
 
         if self.file_is_ok(configFile) == True:
                 json_file = open(configFile).read()
@@ -188,6 +210,7 @@ class AppWorker:
                 Font.enableUpdateInterface()
 
 
+
         if options["RemoveGlyphOrder"]:
             if options["RemoveAllCustomParameters"]:
                 self.printLog('-- Skipping RemoveGlyphOrder > Remove All custom parametr is do it all',True)
@@ -195,6 +218,7 @@ class AppWorker:
                 self.printLog('-- Removing custom glyph order',False)
                 self.removeCustomParameter(font,'glyphOrder',False)
             else: self.printLog('-- No custom glyph order parameter.',False)
+
 
 
         if options["RemoveAllCustomParameters"]:
@@ -208,6 +232,7 @@ class AppWorker:
                 	self.removeCustomParameter(font,customParameter)
                 else: self.printLog('',True)
             else: self.printLog("--- No custom parameters found.",True)
+
 
 
         if options["RemoveAllMastersCustomParameters"]:
@@ -224,6 +249,7 @@ class AppWorker:
                 else:
                     self.printLog('',True)
             else: self.printLog("--- No master custom parameters found.",True)
+
 
 
         if options["AddSuffixesToLigatures"]:
@@ -245,6 +271,16 @@ class AppWorker:
                     self.printLog(message,True)
             else:
                 self.printLog('-- Adding suffixes to ligatures skipped for missing or corrupted json config file',False)
+
+
+
+        if options["RenameSuffixes"]:
+            pass
+
+
+
+        if options["RenameIndividualGlyphs"]:
+            pass
 
 
 
@@ -311,8 +347,9 @@ class AppWorker:
         #font.glyphs.append(newGlyph)
         # Delete a glyph
 
-
         return True
+
+
 
     def start(self, settings):
 
@@ -345,13 +382,18 @@ class AppWorker:
                 self.processFont(font, True, settings['options'])
         self.printLog('===== Done. =====',False)
 
+
+
     def log(self, s):
 
         self.outputLog += s + '\n'
 
+
+
     def getLog(self):
 
         return self.outputLog
+
 
 
 app = AppController()
