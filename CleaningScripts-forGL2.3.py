@@ -27,7 +27,7 @@ class AppController:
         height = 20
 
         out.textProcess = vanilla.TextBox((15, height, 80, 20), "Process:", sizeStyle = 'regular')
-        out.radioInput = vanilla.RadioGroup((80, height, -15, 40), [ "Selected glyphs in current font", "Selected glyphs in all fonts" ], sizeStyle = 'regular')
+        out.radioInput = vanilla.RadioGroup((80, height, -15, 40), [ "All glyphs in current font", "All glyphs in all fonts" ], sizeStyle = 'regular')
         out.radioInput.set(AppWorker.INPUT_SELECTED_CURRENT_FONT)
 
         height += 40 + 20
