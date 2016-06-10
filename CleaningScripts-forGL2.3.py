@@ -169,6 +169,7 @@ class AppWorker:
 
         configFile = os.path.splitext(font.filepath)[0]+'.json'
 
+        Font.disableUpdateInterface()
 
 
         if self.file_is_ok(configFile) == True:
@@ -197,13 +198,12 @@ class AppWorker:
             else:
                 self.printLog('-- Updating all Glyphs Info (total %s)' % glyphs_total,False)
                 glyphsNames = []
-                Font.disableUpdateInterface()
+
                 for glyph in font.glyphs:
             	    glyphsNames.append(glyph.name)
                 for glyphName in glyphsNames:
                     print "---updating %s" % glyphName
             	    font.glyphs[glyphName].updateGlyphInfo()
-                Font.enableUpdateInterface()
 
 
 
@@ -273,13 +273,50 @@ class AppWorker:
         if options["RenameSuffixes"]:
             if self.fontHasConfig == True and 'Rename suffixes' in json_data:
                 self.printLog('-- Renaming suffixes in progress.',False)
+                countGlyphs = 0
+                keySuffixes = []
+                wantedSuffixes = []
+                renames = {}
+
+                for line in json_data['Rename suffixes']:
+                    currentKey = line.keys()[0]
+                    keySuffixes.append(currentKey)
+                    wantedSuffixes += line[currentKey]
+
+                for glyph in font.glyphs:
+                    currentSuffix = os.path.splitext(glyph.name)
+                    cS = currentSuffix[1].lower()
+                    if currentSuffix[1] != "" and cS in wantedSuffixes:
+                        for key in range(len(keySuffixes)):
+                            newSuffix = ""
+                            if currentSuffix[1] in json_data['Rename suffixes'][key][keySuffixes[key]]:
+                                newSuffix = keySuffixes[key]
+                                break
+                        countGlyphs += 1
+                        newGlyphName = currentSuffix[0] + newSuffix
+                        existingGlyphs = []
+                        for uglyph in font.glyphs:
+                            if newGlyphName in uglyph.name:
+                                existingGlyphs.append(uglyph.name)
+                        else:
+                            if existingGlyphs != []:
+                                newGlyphName = newGlyphName + "." + str(len(existingGlyphs) + 1).zfill(3)
+                        renames.update({glyph.name: newGlyphName})
+
+                else:
+                    for key in renames:
+                        print "---- %s will be renamed to %s" % (key, renames[key])
+                        font.glyphs[key].name = renames[key]
+                    message = "-- %s suffixes were renamed." % countGlyphs
+                    self.printLog(message,True)
             else:
+                print json_data
                 self.printLog('-- Renaming suffixes skipped for missing, corrupted json file. Or the file has no info for this operation.',False)
 
 
 
-        if options["RenameIndividualGlyphs"] and 'Rename Individual Glyphs' in json_data:
-            if self.fontHasConfig == True:
+        if options["RenameIndividualGlyphs"]:
+            if self.fontHasConfig == True and 'Rename Individual Glyphs' in json_data:
                 self.printLog('-- Renaming individual glyphs in progress.',False)
             else:
                 self.printLog('-- Renaming individual glyphs skipped. Missing, corrupted json file. Or the file has no info for this operation.',False)
@@ -339,15 +376,10 @@ class AppWorker:
             else:
                 self.printLog('-- Removing Unnecessary Glyphs skipped for missing or corrupted json config file',False)
 
-        #TODO: the other functionalities :-/
-        #howtos forother functionalities
-        # Add a glyph
-        #font.glyphs.append(GSGlyph('adieresis'))
-        # Duplicate a glyph under a different name
-        #newGlyph = font.glyphs['A'].copy()
-        #newGlyph.name = 'A.alt'
-        #font.glyphs.append(newGlyph)
-        # Delete a glyph
+
+
+        Font.enableUpdateInterface()
+        Glyphs.redraw()
 
         return True
 
