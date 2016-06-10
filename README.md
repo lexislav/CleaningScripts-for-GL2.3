@@ -30,6 +30,10 @@ Search for Unnecessary glyphs defined in file and remove them from font.
 
 ## Changelog
 
+### 0.6
+Added features:
+- renaming suffixes defined in json config file
+
 #### 0.5
 Added features:
 - checkboxes reorder
