@@ -39,6 +39,8 @@ class AppController:
         height += 19
         out.checkBoxRemoveAllCustomParameters = vanilla.CheckBox((80, height, -15, 19), "Remove all custom parameters", value=False, sizeStyle = 'regular')
         height += 19
+        out.checkBoxRemoveAllMastersCustomParameters = vanilla.CheckBox((80, height, -15, 19), "Remove all master custom parameters", value=False, sizeStyle = 'regular')
+        height += 19
         out.checkBoxAddSuffixesToLigatures = vanilla.CheckBox((80, height, -15, 19), "Add suffixes to ligatures", value=False, sizeStyle = 'regular')
         height += 19
 
@@ -65,6 +67,7 @@ class AppController:
                 "UpdateGlyphInfo": self.w.checkBoxUpdateGlyphInfo.get(),
                 "RemoveGlyphOrder": self.w.checkBoxRemoveGlyphOrder.get(),
                 "RemoveAllCustomParameters": self.w.checkBoxRemoveAllCustomParameters.get(),
+                "RemoveAllMastersCustomParameters": self.w.checkBoxRemoveAllMastersCustomParameters.get(),
                 "AddSuffixesToLigatures": self.w.checkBoxAddSuffixesToLigatures.get(),
                 "DeleteUnnecessaryGlyphs": self.w.checkBoxDeleteUnnecessaryGlyphs.get()
             }
@@ -201,6 +204,23 @@ class AppWorker:
                 	self.printLog('--- Removing parameter %s' % customParameter,False)
                 	self.removeCustomParameter(font,customParameter)
             else: self.printLog("--- No custom parameters found.",True)
+
+
+        if options["RemoveAllMastersCustomParameters"]:
+
+            self.printLog('-- Removing all master custom parameters',False)
+            parameters = []
+
+            for master in font.masters:
+                for customParameter in master.customParameters:
+                    parameters.append(customParameter.name)
+
+            if len(parameters) > 0:
+                for customParameter in parameters:
+                	self.printLog('--- Removing master custom parameter %s' % customParameter,False)
+                	#self.removeCustomParameter(font,customParameter)
+                    #del(master.customParameters[parameter])
+            else: self.printLog("--- No master custom parameters found.",True)
 
 
         if options["AddSuffixesToLigatures"]:
