@@ -176,21 +176,17 @@ class AppWorker:
                 if self.is_json(json_file) == True:
                     json_data = self.get_json_data(json_file)
                     self.fontHasConfig = True
-                    self.fontHasConfig = True
                     self.printLog("-- font has json file attached and file seems OK.",True)
                 else:
                     self.fontHasConfig = False
-                    self.fontHasConfig = False
                     self.printLog("-- WARNING: font has json file attached but file is not valid json. Some actions may be skipped",True)
         elif self.generalConfigExists:
-            self.fontHasConfig = True
             self.fontHasConfig = True
             json_data = self.generalConfigData
             self.printLog("-- there is NO json file attached to the font. General script config will be used instead.",True)
         else:
             self.fontHasConfig = False
-            self.fontHasConfig = False
-            json_data = None
+            json_data = {}
             self.printLog("-- there is NO json file attached to the font or to the script. Some steps may be skipped for that reason.",True)
 
 
@@ -253,7 +249,7 @@ class AppWorker:
 
 
         if options["AddSuffixesToLigatures"]:
-            if self.fontHasConfig == True and json_data['Suffixes for ligatures']:
+            if self.fontHasConfig == True and 'Suffixes for ligatures' in json_data:
                 self.printLog('-- Adding suffixes to ligatures',False)
                 countGlyphs = 0
                 for ligature in json_data['Suffixes for ligatures']:
@@ -275,29 +271,18 @@ class AppWorker:
 
 
         if options["RenameSuffixes"]:
-            """
-            NOTE: Skript  přejmenuje koncovky.
-            Databáze bude obsahovat 1. seznam možných koncovek (small, sm, sc, smcp)
-            2. novou koncovku, která bude pouze jedna a bude odpovídat požadavkům Glyphsapp, tedy sc.
-            V případě, že dojde ke zdvojení, např. pokud by uživatel z A.sc udělal a.smcp a z a.sc taky
-             druhá sada by dostala koncovku a.smcp.001.
-            """
-            pass
+            if self.fontHasConfig == True and 'Rename suffixes' in json_data:
+                self.printLog('-- Renaming suffixes in progress.',False)
+            else:
+                self.printLog('-- Renaming suffixes skipped for missing, corrupted json file. Or the file has no info for this operation.',False)
 
 
 
-        if options["RenameIndividualGlyphs"]:
-            """
-            NOTE: Ručně vytvořený seznam záměn název za název.
-            Některé stejné glyfy mohou být mít různé názvy, např. liter může být afii61289 i uni2113,
-            v takovém případě bude výsledkem litter a litter.001.
-            Čili je to množina názvů před, jeden název po.
-            """
-            """
-            pro liter: hledej alternativy, sestav list znaků na přejmenování.
-            přejmnuj seznam
-            """
-            pass
+        if options["RenameIndividualGlyphs"] and 'Rename Individual Glyphs' in json_data:
+            if self.fontHasConfig == True:
+                self.printLog('-- Renaming individual glyphs in progress.',False)
+            else:
+                self.printLog('-- Renaming individual glyphs skipped. Missing, corrupted json file. Or the file has no info for this operation.',False)
 
 
 
@@ -340,7 +325,7 @@ class AppWorker:
 
 
         if options["DeleteUnnecessaryGlyphs"]:
-            if self.fontHasConfig == True and json_data['Unnecessary Glyphs']:
+            if self.fontHasConfig == True and 'Unnecessary Glyphs' in json_data:
                 self.printLog('-- Removing Unnecessary Glyphs defined in attached file',False)
                 countGlyphs = 0
                 for uneccessary_glyph in json_data['Unnecessary Glyphs']:
