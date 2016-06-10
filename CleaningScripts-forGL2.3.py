@@ -1,4 +1,4 @@
-#MenuTitle: Cleaning Scripts 0.5 for GL2.3
+#MenuTitle: Cleaning Scripts 0.6 for GL2.3
 #encoding: utf-8
 """
 CleaningScripts-forGL2.3.py
@@ -22,7 +22,7 @@ class AppController:
 
     def getWindow(self):
 
-        out = vanilla.FloatingWindow((405, 305), "Cleaning Scripts v0.5")
+        out = vanilla.FloatingWindow((405, 305), "Cleaning Scripts v0.6")
 
         height = 20
 
