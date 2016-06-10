@@ -207,19 +207,18 @@ class AppWorker:
 
 
         if options["RemoveAllMastersCustomParameters"]:
-
             self.printLog('-- Removing all master custom parameters',False)
             parameters = []
-
             for master in font.masters:
                 for customParameter in master.customParameters:
                     parameters.append(customParameter.name)
-
             if len(parameters) > 0:
-                for customParameter in parameters:
-                	self.printLog('--- Removing master custom parameter %s' % customParameter,False)
-                	#self.removeCustomParameter(font,customParameter)
-                    #del(master.customParameters[parameter])
+                for master in font.masters:
+                    for customParameter in parameters:
+                        self.printLog('--- Removing master custom parameter %s from master %s' % (customParameter, master),False)
+                        del(master.customParameters[customParameter])
+                else:
+                    self.printLog('',True)
             else: self.printLog("--- No master custom parameters found.",True)
 
 
