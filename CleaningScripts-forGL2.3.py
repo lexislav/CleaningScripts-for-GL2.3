@@ -35,21 +35,21 @@ class AppController:
         out.textApply = vanilla.TextBox((15, height, 80, 20), "Apply:", sizeStyle = 'regular')
         out.checkBoxUpdateGlyphInfo = vanilla.CheckBox((80, height, -15, 19), "Apply Update Glyph Info", value=True, sizeStyle = 'regular')
         height += 19
-        out.checkBoxRemoveGlyphOrder = vanilla.CheckBox((80, height, -15, 19), "Remove original glyph order ", value=False, sizeStyle = 'regular')
-        height += 19
-        out.checkBoxRemoveAllCustomParameters = vanilla.CheckBox((80, height, -15, 19), "Remove all custom parameters", value=False, sizeStyle = 'regular')
-        height += 19
-        out.checkBoxRemoveAllMastersCustomParameters = vanilla.CheckBox((80, height, -15, 19), "Remove all masters custom parameters", value=False, sizeStyle = 'regular')
-        height += 19
         out.checkBoxAddSuffixesToLigatures = vanilla.CheckBox((80, height, -15, 19), "Add suffixes to ligatures", value=False, sizeStyle = 'regular')
-        height += 19
-        out.checkBoxRemoveAllFeatures = vanilla.CheckBox((80, height, -15, 19), "Remove all OpenType features, classes, prefixes", value=False, sizeStyle = 'regular')
         height += 19
 
         height += 20
 
         out.textOptions = vanilla.TextBox((15, height, 80, 20), "Remove:", sizeStyle = 'regular')
         out.checkBoxDeleteUnnecessaryGlyphs = vanilla.CheckBox((80, height, -15, 19), "Delete Unnecessary Glyphs", value = False, sizeStyle = 'regular')
+        height += 19
+        out.checkBoxRemoveGlyphOrder = vanilla.CheckBox((80, height, -15, 19), "Remove original glyph order ", value=False, sizeStyle = 'regular')
+        height += 19
+        out.checkBoxRemoveAllCustomParameters = vanilla.CheckBox((80, height, -15, 19), "Remove all custom parameters", value=False, sizeStyle = 'regular')
+        height += 19
+        out.checkBoxRemoveAllMastersCustomParameters = vanilla.CheckBox((80, height, -15, 19), "Remove all masters custom parameters", value=False, sizeStyle = 'regular')
+        height += 19
+        out.checkBoxRemoveAllFeatures = vanilla.CheckBox((80, height, -15, 19), "Remove all OpenType features, classes, prefixes", value=False, sizeStyle = 'regular')
         height += 19
 
         out.buttonProcess = vanilla.Button((-15 - 80, -15 - 20, -15, -15), "Process", sizeStyle = 'regular', callback=self.process)
