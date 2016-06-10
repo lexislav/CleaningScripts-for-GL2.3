@@ -31,7 +31,8 @@ Search for Unnecessary glyphs defined in file and remove them from font.
 ## Changelog
 
 #### 0.5
-Added featurs:
+Added features:
+- checkboxes reorder
 - Remove all masters custom parameters
 - Remove all OpenType classes, features and feature prefixes from the font
 - fixed some minor bugs
