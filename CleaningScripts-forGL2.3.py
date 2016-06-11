@@ -158,6 +158,14 @@ class AppWorker:
 
 
 
+    def get_all_font_names(self, font):
+        allFontNames = []
+        for glyph in font.glyphs:
+            allFontNames.append(glyph.name)
+        return allFontNames
+
+
+
     def processFont(self, font, onlySelected, options):
 
         glyphs_total = len(font.glyphs)
@@ -277,6 +285,7 @@ class AppWorker:
                 keySuffixes = []
                 wantedSuffixes = []
                 renames = {}
+                allFontNames = self.get_all_font_names(font)
 
                 for line in json_data['Rename suffixes']:
                     currentKey = line.keys()[0]
@@ -295,9 +304,9 @@ class AppWorker:
                         countGlyphs += 1
                         newGlyphName = currentSuffix[0] + newSuffix
                         existingGlyphs = []
-                        for uglyph in font.glyphs:
-                            if newGlyphName in uglyph.name:
-                                existingGlyphs.append(uglyph.name)
+                        for uglyph in allFontNames:
+                            if newGlyphName in uglyph:
+                                existingGlyphs.append(uglyph)
                         else:
                             if existingGlyphs != []:
                                 newGlyphName = newGlyphName + "." + str(len(existingGlyphs) + 1).zfill(3)

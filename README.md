@@ -30,6 +30,14 @@ Search for Unnecessary glyphs defined in file and remove them from font.
 
 ## Changelog
 
+### 0.7
+Added features:
+– Rename individual glyphs
+
+Fixes:
+– speed optimalization for rename suffixes script
+
+
 ### 0.6
 Added features:
 - renaming suffixes defined in json config file
