@@ -28,7 +28,8 @@ def pathsMatch(A,B):
   					return False
   		else:
   			if A[layerIndex].compareString() == B[layerIndex].compareString():
-  				looksGood = "True"
+  				looksGood = True
+  			else: looksGood = False
   			#iterate trought paths and nodes here is propably more reliable
 
 	match = looksGood
@@ -44,22 +45,18 @@ def glyphsComparation(A,B):
 			else:
 				looksGood =  False
 				break
-		else:
-			if looksGood == True:
-				match = True
+	match = looksGood
 	return match
 
 countSelection = len(font.selection)
-
-print "Working with %s \n" % font.familyName
 if countSelection <= 1:
 	print "At least two glyphs need to be selected for script to run."
 else:
+	print "Working with %s \n" % font.familyName
 	GlyphA = font.selection[0]
 	GlyphB = font.selection[1]
-	if countSelection > 2:
-		print "Too many selected glyphs. Just first two will be compared."
-if glyphsComparation(GlyphA,GlyphB) == True:
-	print "glyphs match"
-else:
-	print "glyphs don't match"
+	if countSelection > 2: print "Too many selected glyphs. Just first two will be compared."
+	match = glyphsComparation(GlyphA,GlyphB)
+	print match
+	if match == True: print "are same"
+	else: print "not same"
