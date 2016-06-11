@@ -304,6 +304,7 @@ class AppWorker:
                         countGlyphs += 1
                         newGlyphName = currentSuffix[0] + newSuffix
                         existingGlyphs = []
+                        #TODO sestavit metodu na zjištění případné existence nového jména a získání patřičného indexu
                         for uglyph in allFontNames:
                             if newGlyphName in uglyph:
                                 existingGlyphs.append(uglyph)
@@ -327,6 +328,7 @@ class AppWorker:
         if options["RenameIndividualGlyphs"]:
             if self.fontHasConfig == True and 'Rename Individual Glyphs' in json_data:
                 self.printLog('-- Renaming individual glyphs in progress.',False)
+                countGlyphs = 0
             else:
                 self.printLog('-- Renaming individual glyphs skipped. Missing, corrupted json file. Or the file has no info for this operation.',False)
 
