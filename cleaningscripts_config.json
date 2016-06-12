@@ -1,12 +1,18 @@
 {
     "Rename suffixes": [{
-        ".sc": [".small", ".smcp", ".sc"]
+        ".sc": [".small", ".smcp"]
     }, {
         ".swsh": [".swash"]
     }, {
         ".sinf": [".inferior"]
     }, {
         ".sups": [".superior"]
+    }, {
+        ".tosf": [".OT"]
+    }, {
+        ".lf": [".LP"]
+    }, {
+        ".tf": [".LT"]
     }],
 
 	"Suffixes for ligatures": [{
@@ -22,8 +28,54 @@
 	}, {
 		"published": ["publish"]
 	}, {
+		"f_f_i": ["ffi"]
+	}, {
+		"f_f_l": ["ffl"]
+	}, {
 		"f_i": ["fi"]
+	}, {
+		"f_l": ["fl"]
+	}, {
+		"acute.case": ["Acute"]
+	}, {
+		"caron.case": ["Caron"]
+	}, {
+		"grave.case": ["Grave"]
+	}, {
+		"breve.case": ["Breve"]
+	}, {
+		"dieresis.case": ["Dieresis"]
+	}, {
+		"macron.case": ["Macron"]
+	}, {
+		"hungarumlaut.case": ["Hungarumlaut"]
+	}, {
+		"caron.alt": ["caronalt", "caron.salt"]
+	}, {
+		"tilde.case": ["Tilde"]
+	}, {
+		"dotaccent.case": ["Dotaccent"]
+	}, {
+		"ring.case": ["Ring"]
+	}, {
+		"co": ["careof"]
+	}, {
+		"ac": ["accountof"]
+	}, {
+		"handleft": ["leftBlackIndex"]
+	}, {
+		"handright": ["rightBlackIndex"]
+	}, {
+		"iacute_jacute": ["iacute_j.loclNLD"]
+	}, {
+		"Iacute_Jacute": ["Iacute_J.loclNLD"]
+	}, {
+		"handleft": ["leftBlackIndex"]
+	}, {
+		"handright": ["rightBlackIndex"]
+	}, {
+		".notdef": ["undef"]
 	}],
 
-	"Unnecessary Glyphs": ["NULL", ".null"]
+	"Unnecessary Glyphs": ["NULL", ".null", "CR"]
 }
