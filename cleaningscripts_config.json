@@ -8,17 +8,29 @@
     }, {
         ".sups": [".superior"]
     }, {
-        ".tosf": [".OT"]
+        ".tosf": [".OT", ".taboldstyle"]
     }, {
-        ".lf": [".LP"]
+        ".lf": [".LP", ".lin"]
     }, {
-        ".tf": [".LT"]
+        ".tf": [".LT", ".tab"]
+    }, {
+        ".case": [".cap"]
+    }, {
+        ".dnom": [".denominator"]
+    }, {
+        ".numr": [".numerator"]
+    }, {
+        ".pl": [".loclPLK"]
+    }, {
+        ".ord": [".ordn"]
+    }, {
+        ".sc.tf": ["small.tf"]
     }],
 
 	"Suffixes for ligatures": [{
 		"liga": ["f_i", "f_l", "f_f_i"]
 	}, {
-		"dlig": ["T_h", "f_t"]
+		"dlig": ["T_h", "f_t", "s_p", "s_t", "c_t"]
 	}, {
 		"hlig": ["longs_i"]
 	}],
@@ -50,7 +62,7 @@
 	}, {
 		"hungarumlaut.case": ["Hungarumlaut"]
 	}, {
-		"caron.alt": ["caronalt", "caron.salt"]
+		"caron.alt": ["caronalt", "caron.salt", "caron.slovak"]
 	}, {
 		"tilde.case": ["Tilde"]
 	}, {
@@ -66,9 +78,9 @@
 	}, {
 		"handright": ["rightBlackIndex"]
 	}, {
-		"iacute_jacute": ["iacute_j.loclNLD"]
+		"iacute_jacute": ["iacute_j.loclNLD", "ijacute"]
 	}, {
-		"Iacute_Jacute": ["Iacute_J.loclNLD"]
+		"Iacute_Jacute": ["Iacute_J.loclNLD", "IJacute"]
 	}, {
 		"handleft": ["leftBlackIndex"]
 	}, {
@@ -77,5 +89,5 @@
 		".notdef": ["undef"]
 	}],
 
-	"Unnecessary Glyphs": ["NULL", ".null", "CR"]
+	"Unnecessary Glyphs": ["NULL", ".null", "CR", "NUL"]
 }
