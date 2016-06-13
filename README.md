@@ -30,6 +30,9 @@ Search for Unnecessary glyphs defined in file and remove them from font.
 
 ## Changelog
 
+### 0.8
+- Rename suffixes now also looks for suffixes without dot
+
 ### 0.7
 Added features:
 – Rename individual glyphs
