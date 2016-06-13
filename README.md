@@ -33,9 +33,11 @@ Search for Unnecessary glyphs defined in file and remove them from font.
 ### 0.7
 Added features:
 – Rename individual glyphs
+- Update glyph info turns of Custom naming / Nice names
 
 Fixes:
 – speed optimalization for rename suffixes script
+- refactoring some features
 
 
 ### 0.6
