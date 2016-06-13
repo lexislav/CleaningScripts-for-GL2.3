@@ -55,6 +55,8 @@ class AppController:
         height += 19
         out.checkBoxRemoveAllFeatures = vanilla.CheckBox((80, height, -15, 19), "all OpenType features, classes, prefixes", value=False, sizeStyle = 'regular')
         height += 19
+        out.checkBoxRemovePUA = vanilla.CheckBox((80, height, -15, 19), "remove PUA", value=False, sizeStyle = 'regular')
+        height += 19
 
         out.buttonProcess = vanilla.Button((-15 - 80, -15 - 20, -15, -15), "Process", sizeStyle = 'regular', callback=self.process)
         out.setDefaultButton(out.buttonProcess)
@@ -78,6 +80,7 @@ class AppController:
                 "RenameSuffixes": self.w.checkBoxRenameSuffixes.get(),
                 "RenameIndividualGlyphs": self.w.checkBoxRenameIndividualGlyphs.get(),
                 "RemoveAllFeatures": self.w.checkBoxRemoveAllFeatures.get(),
+                "RemovePUA": self.w.checkBoxRemovePUA.get(),
                 "DeleteUnnecessaryGlyphs": self.w.checkBoxDeleteUnnecessaryGlyphs.get()
             }
         }
@@ -216,6 +219,17 @@ class AppWorker:
             self.printLog("-- there is NO json file attached to the font or to the script. Some steps may be skipped for that reason.",True)
 
 
+        if options["RemovePUA"]:
+            PUAglyphs = []
+            self.printLog('-- Removing unicode for glyphs in PUA.',False)
+            for glyph in font.glyphs:
+            	if (glyph.unicode >= "E000" and glyph.unicode <= "F8FF") or (glyph.unicode >= "F0000" and glyph.unicode <= "FFFFD") or (glyph.unicode >= "100000" and glyph.unicode <= "10FFFD"):
+            		PUAglyphs.append(glyph.name)
+            for glyph in PUAglyphs:
+                font.glyphs[glyph].unicode = None
+            self.printLog("-- Unicode has been removed from %s glyphs originaly in PUA" % len(PUAglyphs),True)
+
+
 
         if options["RenameIndividualGlyphs"]:
             if self.fontHasConfig == True and 'Rename Individual Glyphs' in json_data:
@@ -226,7 +240,7 @@ class AppWorker:
                     for sGlyph in line[individualGlyphName]:
                         if font.glyphs[sGlyph]:
                             newName = self.get_correct_new_name(individualGlyphName)
-                            print "------ %s found and will be renamed to %s" % (sGlyph, newName)
+                            #print "------ %s found and will be renamed to %s" % (sGlyph, newName)
                             font.glyphs[sGlyph].name = newName
                             countGlyphs += 1
                 else:
@@ -246,7 +260,7 @@ class AppWorker:
             for glyph in font.glyphs:
                 glyphsNames.append(glyph.name)
             for glyphName in glyphsNames:
-                print "---updating %s" % glyphName
+                #print "---updating %s" % glyphName
                 font.glyphs[glyphName].updateGlyphInfo()
             else:
                 self.printLog('', True)
@@ -264,7 +278,7 @@ class AppWorker:
                     for lglyphName in ligature[key]:
                         if font.glyphs[lglyphName]:
                             newGlyphName = self.get_correct_new_name(lglyphName + "." + key)
-                            print "------ %s found and will be renamed to %s" % (lglyphName, newGlyphName)
+                            #print "------ %s found and will be renamed to %s" % (lglyphName, newGlyphName)
                             font.glyphs[lglyphName].name = newGlyphName
                             countGlyphs += 1
                 else:

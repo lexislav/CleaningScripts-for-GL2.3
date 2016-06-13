@@ -31,6 +31,8 @@ Search for Unnecessary glyphs defined in file and remove them from font.
 ## Changelog
 
 ### 0.8
+Added new features:
+- Unicode from glyphs from PUA may be removed by script
 - Rename suffixes now also looks for suffixes without dot
 
 ### 0.7
