@@ -320,9 +320,9 @@ class AppWorker:
             if options["RemoveAllCustomParameters"]:
                 self.printLog('-- Skipping RemoveGlyphOrder > Remove All custom parametr is do it all',True)
             elif Glyphs.font.customParameters["glyphOrder"]:
-                self.printLog('-- Removing custom glyph order',False)
-                self.removeCustomParameter(font,'glyphOrder',False)
-            else: self.printLog('-- No custom glyph order parameter.',False)
+                self.printLog('-- Removing custom glyph order',True)
+                self.removeCustomParameter(font,'glyphOrder')
+            else: self.printLog('-- No custom glyph order parameter.',True)
 
 
 
