@@ -10,15 +10,9 @@
     }, {
         ".tosf": [".OT", ".taboldstyle", "tonum"]
     }, {
-<<<<<<< HEAD
-        ".lf": [".LP", ".lin"]
-    }, {
-        ".tf": [".LT", ".tab"]
-=======
         ".lf": [".LP", ".lin", ".fitted"]
     }, {
         ".tf": [".LT", ".tab", ".tn"]
->>>>>>> ac77d7d341a8126b13e9db745b47ba30fd3fbed1
     }, {
         ".osf": [".oldstyle"]
     }, {
@@ -92,11 +86,6 @@
 	}, {
 		"handleft": ["leftBlackIndex"]
 	}, {
-<<<<<<< HEAD
-		"handright": ["rightBlackIndex"]
-	}, {
-		".notdef": ["undef"]
-=======
 		"idotless.sc": ["Dotlessi.sc"]
 	}, {
 		"handright": ["rightBlackIndex"]
@@ -120,7 +109,6 @@
 		"arrow.dl": ["southWestArrow"]
 	}, {
 		"arrow.dr": ["southEastArrow"]
->>>>>>> ac77d7d341a8126b13e9db745b47ba30fd3fbed1
 	}],
 
 	"Unnecessary Glyphs": ["NULL", ".null", "CR", "NUL"]
