@@ -106,6 +106,8 @@ class AppWorker:
 
     outputLog = None
 
+    allGlyphsNames = []
+
     fontHasConfig = False
     generalConfigExists = False
     generalConfigData = None
@@ -113,6 +115,7 @@ class AppWorker:
     # Setting variables
     configFile = ""
     generalConfigFile = ""
+    disablesNiceNames = False
 
 
 
@@ -159,10 +162,24 @@ class AppWorker:
 
 
     def get_all_font_names(self, font):
-        allFontNames = []
         for glyph in font.glyphs:
-            allFontNames.append(glyph.name)
-        return allFontNames
+            self.allGlyphsNames.append(glyph.name)
+        return True
+
+
+
+    def get_correct_new_name(self, proposedName):
+        self.get_all_font_names
+        existingGlyphs = []
+        for sGlyph in self.allGlyphsNames:
+            if proposedName in sGlyph:
+                existingGlyphs.append(sGlyph)
+        else:
+            if existingGlyphs != []:
+                correctedName = proposedName + "." + str(len(existingGlyphs) + 1).zfill(3)
+            else:
+                 correctedName = proposedName
+        return correctedName
 
 
 
@@ -202,7 +219,8 @@ class AppWorker:
 
         if options["UpdateGlyphInfo"]:
             if font.disablesNiceNames:
-                self.printLog('-- WARNING: Can not run Update Glyph Info. Use custom naming is on. You need to turn it off.',True)
+                self.printLog('-- WARNING: Custom naming / Nice names is on. Script will turn it off.',True)
+                font.disablesNiceNames = False
             else:
                 self.printLog('-- Updating all Glyphs Info (total %s)' % glyphs_total,False)
                 glyphsNames = []
@@ -285,7 +303,6 @@ class AppWorker:
                 keySuffixes = []
                 wantedSuffixes = []
                 renames = {}
-                allFontNames = self.get_all_font_names(font)
 
                 for line in json_data['Rename suffixes']:
                     currentKey = line.keys()[0]
@@ -302,22 +319,13 @@ class AppWorker:
                                 newSuffix = keySuffixes[key]
                                 break
                         countGlyphs += 1
-                        newGlyphName = currentSuffix[0] + newSuffix
-                        existingGlyphs = []
-                        #TODO sestavit metodu na zjištění případné existence nového jména a získání patřičného indexu
-                        for uglyph in allFontNames:
-                            if newGlyphName in uglyph:
-                                existingGlyphs.append(uglyph)
-                        else:
-                            if existingGlyphs != []:
-                                newGlyphName = newGlyphName + "." + str(len(existingGlyphs) + 1).zfill(3)
+                        newGlyphName = self.get_correct_new_name(currentSuffix[0] + newSuffix)
                         renames.update({glyph.name: newGlyphName})
-
                 else:
                     for key in renames:
                         print "---- %s will be renamed to %s" % (key, renames[key])
                         font.glyphs[key].name = renames[key]
-                    message = "-- %s suffixes were renamed." % countGlyphs
+                    message = "-- %s glyphs with suffixes were renamed." % countGlyphs
                     self.printLog(message,True)
             else:
                 print json_data
@@ -329,6 +337,12 @@ class AppWorker:
             if self.fontHasConfig == True and 'Rename Individual Glyphs' in json_data:
                 self.printLog('-- Renaming individual glyphs in progress.',False)
                 countGlyphs = 0
+                for line in json_data['Rename Individual Glyphs']:
+                    individualGlyphName = line.keys()[0]
+                    print individualGlyphName,": ",line[individualGlyphName]
+                    for sGlyph in line[individualGlyphName]:
+                        if font.glyphs[sGlyph]:
+                            print "This one must be renamed: %s" % font.glyphs[sGlyph]
             else:
                 self.printLog('-- Renaming individual glyphs skipped. Missing, corrupted json file. Or the file has no info for this operation.',False)
 
