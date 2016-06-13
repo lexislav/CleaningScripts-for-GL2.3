@@ -284,9 +284,9 @@ class AppWorker:
                     print "--- %s: checking existence of glyphs %s" % (key, ligatureGlyphsString)
                     for lglyphName in ligature[key]:
                         if font.glyphs[lglyphName]:
-                            newName = lglyphName + "." + key
-                            print "------ %s found and will be renamed to %s" % (lglyphName, newName)
-                            font.glyphs[lglyphName].name = newName
+                            newGlyphName = self.get_correct_new_name(lglyphName + "." + key)
+                            print "------ %s found and will be renamed to %s" % (lglyphName, newGlyphName)
+                            font.glyphs[lglyphName].name = newGlyphName
                             countGlyphs += 1
                 else:
                     message = "-- Defined suffixes added to %s glyphs." % countGlyphs
@@ -339,10 +339,15 @@ class AppWorker:
                 countGlyphs = 0
                 for line in json_data['Rename Individual Glyphs']:
                     individualGlyphName = line.keys()[0]
-                    print individualGlyphName,": ",line[individualGlyphName]
                     for sGlyph in line[individualGlyphName]:
                         if font.glyphs[sGlyph]:
-                            print "This one must be renamed: %s" % font.glyphs[sGlyph]
+                            newName = self.get_correct_new_name(individualGlyphName)
+                            print "------ %s found and will be renamed to %s" % (sGlyph, newName)
+                            font.glyphs[sGlyph].name = newName
+                            countGlyphs += 1
+                else:
+                    message = "-- %s Individual glyphs have been renamed." % countGlyphs
+                    self.printLog(message,True)
             else:
                 self.printLog('-- Renaming individual glyphs skipped. Missing, corrupted json file. Or the file has no info for this operation.',False)
 
