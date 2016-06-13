@@ -16,7 +16,7 @@
     }, {
         ".tf.zero": [".alt_TF"]
     }, {
-        ".osf": [".oldstyle", ".OSF"]
+        ".osf": [".oldstyle", ".OSF", "oldstyle"]
     }, {
         ".zero": [".slash"]
     }, {
