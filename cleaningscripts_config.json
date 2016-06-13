@@ -1,18 +1,38 @@
 {
     "Rename suffixes": [{
-        ".sc": [".small", ".smcp", ".sc"]
+        ".sc": [".small", ".smcp"]
     }, {
         ".swsh": [".swash"]
     }, {
         ".sinf": [".inferior"]
     }, {
         ".sups": [".superior"]
+    }, {
+        ".tosf": [".OT", ".taboldstyle", "tonum"]
+    }, {
+        ".lf": [".LP", ".lin"]
+    }, {
+        ".tf": [".LT", ".tab"]
+    }, {
+        ".osf": [".oldstyle"]
+    }, {
+        ".case": [".cap"]
+    }, {
+        ".dnom": [".denominator"]
+    }, {
+        ".numr": [".numerator"]
+    }, {
+        ".pl": [".loclPLK"]
+    }, {
+        ".ord": [".ordn"]
+    }, {
+        ".sc.tf": ["small.tf"]
     }],
 
 	"Suffixes for ligatures": [{
 		"liga": ["f_i", "f_l", "f_f_i"]
 	}, {
-		"dlig": ["T_h", "f_t"]
+		"dlig": ["T_h", "f_t", "s_p", "s_t", "c_t"]
 	}, {
 		"hlig": ["longs_i"]
 	}],
@@ -22,8 +42,54 @@
 	}, {
 		"published": ["publish"]
 	}, {
+		"f_f_i": ["ffi"]
+	}, {
+		"f_f_l": ["ffl"]
+	}, {
 		"f_i": ["fi"]
+	}, {
+		"f_l": ["fl"]
+	}, {
+		"acute.case": ["Acute"]
+	}, {
+		"caron.case": ["Caron"]
+	}, {
+		"grave.case": ["Grave"]
+	}, {
+		"breve.case": ["Breve"]
+	}, {
+		"dieresis.case": ["Dieresis"]
+	}, {
+		"macron.case": ["Macron"]
+	}, {
+		"hungarumlaut.case": ["Hungarumlaut"]
+	}, {
+		"caron.alt": ["caronalt", "caron.salt", "caron.slovak"]
+	}, {
+		"tilde.case": ["Tilde"]
+	}, {
+		"dotaccent.case": ["Dotaccent"]
+	}, {
+		"ring.case": ["Ring"]
+	}, {
+		"co": ["careof"]
+	}, {
+		"ac": ["accountof"]
+	}, {
+		"handleft": ["leftBlackIndex"]
+	}, {
+		"handright": ["rightBlackIndex"]
+	}, {
+		"iacute_jacute": ["iacute_j.loclNLD", "ijacute"]
+	}, {
+		"Iacute_Jacute": ["Iacute_J.loclNLD", "IJacute"]
+	}, {
+		"handleft": ["leftBlackIndex"]
+	}, {
+		"handright": ["rightBlackIndex"]
+	}, {
+		".notdef": ["undef"]
 	}],
 
-	"Unnecessary Glyphs": ["NULL", ".null"]
+	"Unnecessary Glyphs": ["NULL", ".null", "CR", "NUL"]
 }
