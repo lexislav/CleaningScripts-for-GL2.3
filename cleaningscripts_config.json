@@ -8,7 +8,7 @@
     }, {
         ".sups": [".superior"]
     }, {
-        ".tosf": [".OT", ".taboldstyle", "tonum", ".TOSF"]
+        ".tosf": [".OT", ".taboldstyle", ".tonum", ".TOSF"]
     }, {
         ".lf": [".LP", ".lin", ".fitted", ".LF"]
     }, {
