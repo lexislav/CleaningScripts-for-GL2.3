@@ -311,7 +311,7 @@ class AppWorker:
 
                 for glyph in font.glyphs:
                     currentSuffix = os.path.splitext(glyph.name)
-                    cS = currentSuffix[1].lower()
+                    cS = currentSuffix[1]
                     if currentSuffix[1] != "" and cS in wantedSuffixes:
                         for key in range(len(keySuffixes)):
                             newSuffix = ""
