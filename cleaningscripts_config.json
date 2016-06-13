@@ -16,6 +16,8 @@
     }, {
         ".tf.zero": [".alt_TF"]
     }, {
+        ".lf.zero": [".slashfitted"]
+    }, {
         ".osf": [".oldstyle", ".OSF"]
     }, {
         ".zero": [".slash"]
