@@ -8,11 +8,13 @@
     }, {
         ".sups": [".superior"]
     }, {
-        ".tosf": [".OT", ".taboldstyle"]
+        ".tosf": [".OT", ".taboldstyle", "tonum"]
     }, {
         ".lf": [".LP", ".lin"]
     }, {
         ".tf": [".LT", ".tab"]
+    }, {
+        ".osf": [".oldstyle"]
     }, {
         ".case": [".cap"]
     }, {
