@@ -8,13 +8,17 @@
     }, {
         ".sups": [".superior"]
     }, {
-        ".tosf": [".OT", ".taboldstyle", ".tonum"]
+        ".tosf": [".OT", ".taboldstyle", "tonum", ".TOSF"]
     }, {
-        ".lf": [".LP", ".lin", ".fitted"]
+        ".lf": [".LP", ".lin", ".fitted", ".LF"]
     }, {
-        ".tf": [".LT", ".tab", ".tn"]
+        ".tf": [".LT", ".tab", ".tn", ".TF"]
     }, {
-        ".osf": [".oldstyle"]
+        ".tf.zero": [".alt_TF"]
+    }, {
+        ".osf": [".oldstyle", ".OSF"]
+    }, {
+        ".zero": [".slash"]
     }, {
         ".case": [".cap"]
     }, {
@@ -38,13 +42,15 @@
 	}],
 
     "Rename Individual Glyphs": [{
-		"literSign": ["afii61289", "uni2113", "liter"]
+		"literSign": ["liter"]
 	}, {
 		"published": ["publish"]
 	}, {
 		"f_f_i": ["ffi"]
 	}, {
 		"f_f_l": ["ffl"]
+	}, {
+		"f_f": ["ff"]
 	}, {
 		"f_i": ["fi"]
 	}, {
@@ -53,6 +59,8 @@
 		"acute.case": ["Acute"]
 	}, {
 		"caron.case": ["Caron"]
+	}, {
+		"circumflex.case": ["Circumflex"]
 	}, {
 		"grave.case": ["Grave"]
 	}, {
@@ -72,44 +80,40 @@
 	}, {
 		"ring.case": ["Ring"]
 	}, {
-		"co": ["careof"]
+		"careof": ["co"]
 	}, {
-		"ac": ["accountof"]
+		"accountof": ["ac"]
 	}, {
-		"handleft": ["leftBlackIndex"]
+		"iacute_j.loclNLD": ["iacute_jacute", "ijacute"]
 	}, {
-		"handright": ["rightBlackIndex"]
+		"Iacute_J.loclNLD": ["Iacute_Jacute", "IJacute"]
 	}, {
-		"iacute_jacute": ["iacute_j.loclNLD", "ijacute"]
+		"leftBlackIndex": ["handleft"]
 	}, {
-		"Iacute_Jacute": ["Iacute_J.loclNLD", "IJacute"]
-	}, {
-		"handleft": ["leftBlackIndex"]
+		"rightBlackIndex": ["handright"]
 	}, {
 		"idotless.sc": ["Dotlessi.sc"]
-	}, {
-		"handright": ["rightBlackIndex"]
 	}, {
 		".notdef": ["undef"]
 	}, {
 		"numero": ["No"]
 	}, {
-		"arrow.l": ["leftArrow"]
+		"leftArrow": ["arrow.l"]
 	}, {
-		"arrow.r": ["rightArrow"]
+		"rightArrow": ["arrow.r"]
 	}, {
-		"arrow.u": ["upArrow"]
+		"upArrow": ["arrow.u"]
 	}, {
-		"arrow.d": ["downArrow"]
+		"downArrow": ["arrow.d"]
 	}, {
-		"arrow.ul": ["northWestArrow"]
+		"northWestArrow": ["arrow.ul"]
 	}, {
-		"arrow.ur": ["northEastArrow"]
+		"northEastArrow": ["arrow.ur"]
 	}, {
-		"arrow.dl": ["southWestArrow"]
+		"southWestArrow": ["arrow.dl"]
 	}, {
-		"arrow.dr": ["southEastArrow"]
+		"southEastArrow": ["arrow.dr"]
 	}],
 
-	"Unnecessary Glyphs": ["NULL", ".null", "CR", "NUL"]
+	"Unnecessary Glyphs": ["NULL", ".null", "CR", "NUL", "uni0000", "HT", "LF", "DLE", "DC1", "DC2", "DC3", "DC4", "RS", "US"]
 }
