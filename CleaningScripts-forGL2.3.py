@@ -240,7 +240,7 @@ class AppWorker:
                     for sGlyph in line[individualGlyphName]:
                         if font.glyphs[sGlyph]:
                             newName = self.get_correct_new_name(individualGlyphName)
-                            #print "------ %s found and will be renamed to %s" % (sGlyph, newName)
+                            print "------ %s found and will be renamed to %s" % (sGlyph, newName)
                             font.glyphs[sGlyph].name = newName
                             countGlyphs += 1
                 else:
