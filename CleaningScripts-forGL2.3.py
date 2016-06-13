@@ -301,9 +301,24 @@ class AppWorker:
                         newGlyphName = self.get_correct_new_name(currentSuffix[0] + newSuffix)
                         renames.update({glyph.name: newGlyphName})
                     else:
-                        for singleSuffix in wantedSuffixes:
-                            if singleSuffix in glyph.name:
-                                print "Achtung! Suffix %s without dot in glyph %s. WHat a mess!" % (singleSuffix,glyph.name)
+                        for keySingleSuffix in wantedSuffixes:
+                            if keySingleSuffix[0] == ".":
+                                singleSuffix = keySingleSuffix[1:]
+                            else:
+                                singleSuffix = keySingleSuffix
+                            if (singleSuffix in currentSuffix[0]) and (len(singleSuffix) + glyph.name.find(singleSuffix)) == len(currentSuffix[0]):
+                                for key in range(len(keySuffixes)):
+                                    newSuffix = ""
+                                    if keySingleSuffix in json_data['Rename suffixes'][key][keySuffixes[key]]:
+                                        newSuffix = keySuffixes[key]
+                                        break
+                                countGlyphs += 1
+                                print singleSuffix," / ",keySingleSuffix," / ",newSuffix
+                                if keySingleSuffix in currentSuffix[0]:
+                                    newGlyphName = currentSuffix[0].replace(keySingleSuffix,newSuffix) + currentSuffix[1]
+                                else:
+                                    newGlyphName = currentSuffix[0].replace(singleSuffix,newSuffix) + currentSuffix[1]
+                                renames.update({glyph.name: newGlyphName})
                 else:
                     for key in renames:
                         print "---- %s will be renamed to %s" % (key, renames[key])
