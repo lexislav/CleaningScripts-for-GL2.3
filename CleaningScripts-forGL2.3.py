@@ -33,13 +33,13 @@ class AppController:
         height += 40 + 20
 
         out.textApply = vanilla.TextBox((15, height, 80, 20), "Apply:", sizeStyle = 'regular')
+        out.checkBoxRenameIndividualGlyphs = vanilla.CheckBox((80, height, -15, 19), "Rename individual glyphs", value=False, sizeStyle = 'regular')
+        height += 19
         out.checkBoxUpdateGlyphInfo = vanilla.CheckBox((80, height, -15, 19), "Apply Update Glyph Info", value=True, sizeStyle = 'regular')
         height += 19
         out.checkBoxAddSuffixesToLigatures = vanilla.CheckBox((80, height, -15, 19), "Add suffixes to ligatures", value=False, sizeStyle = 'regular')
         height += 19
         out.checkBoxRenameSuffixes = vanilla.CheckBox((80, height, -15, 19), "Rename suffixes", value=False, sizeStyle = 'regular')
-        height += 19
-        out.checkBoxRenameIndividualGlyphs = vanilla.CheckBox((80, height, -15, 19), "Rename individual glyphs", value=False, sizeStyle = 'regular')
         height += 19
 
         height += 20
@@ -161,7 +161,7 @@ class AppWorker:
 
 
 
-    def get_all_font_names(self, font):
+    def get_all_font_names(self):
         for glyph in font.glyphs:
             self.allGlyphsNames.append(glyph.name)
         return True
@@ -217,6 +217,26 @@ class AppWorker:
 
 
 
+        if options["RenameIndividualGlyphs"]:
+            if self.fontHasConfig == True and 'Rename Individual Glyphs' in json_data:
+                self.printLog('-- Renaming individual glyphs in progress.',False)
+                countGlyphs = 0
+                for line in json_data['Rename Individual Glyphs']:
+                    individualGlyphName = line.keys()[0]
+                    for sGlyph in line[individualGlyphName]:
+                        if font.glyphs[sGlyph]:
+                            newName = self.get_correct_new_name(individualGlyphName)
+                            print "------ %s found and will be renamed to %s" % (sGlyph, newName)
+                            font.glyphs[sGlyph].name = newName
+                            countGlyphs += 1
+                else:
+                    message = "-- %s Individual glyphs have been renamed." % countGlyphs
+                    self.printLog(message,True)
+            else:
+                self.printLog('-- Renaming individual glyphs skipped. Missing, corrupted json file. Or the file has no info for this operation.',False)
+
+
+
         if options["UpdateGlyphInfo"]:
             if font.disablesNiceNames:
                 self.printLog('-- WARNING: Custom naming / Nice names is on. Script will turn it off.',True)
@@ -224,53 +244,13 @@ class AppWorker:
             else:
                 self.printLog('-- Updating all Glyphs Info (total %s)' % glyphs_total,False)
                 glyphsNames = []
-
                 for glyph in font.glyphs:
             	    glyphsNames.append(glyph.name)
                 for glyphName in glyphsNames:
                     print "---updating %s" % glyphName
             	    font.glyphs[glyphName].updateGlyphInfo()
-
-
-
-        if options["RemoveGlyphOrder"]:
-            if options["RemoveAllCustomParameters"]:
-                self.printLog('-- Skipping RemoveGlyphOrder > Remove All custom parametr is do it all',True)
-            elif Glyphs.font.customParameters["glyphOrder"]:
-                self.printLog('-- Removing custom glyph order',False)
-                self.removeCustomParameter(font,'glyphOrder',False)
-            else: self.printLog('-- No custom glyph order parameter.',False)
-
-
-
-        if options["RemoveAllCustomParameters"]:
-            self.printLog('-- Removing all custom parameters',False)
-            parameters = []
-            for customParameter in font.customParameters:
-            	parameters.append(customParameter.name)
-            if len(parameters) > 0:
-                for customParameter in parameters:
-                	self.printLog('--- Removing parameter %s' % customParameter,False)
-                	self.removeCustomParameter(font,customParameter)
-                else: self.printLog('',True)
-            else: self.printLog("--- No custom parameters found.",True)
-
-
-
-        if options["RemoveAllMastersCustomParameters"]:
-            self.printLog('-- Removing all master custom parameters',False)
-            parameters = []
-            for master in font.masters:
-                for customParameter in master.customParameters:
-                    parameters.append(customParameter.name)
-            if len(parameters) > 0:
-                for master in font.masters:
-                    for customParameter in parameters:
-                        self.printLog('--- Removing master custom parameter %s from master %s' % (customParameter, master),False)
-                        del(master.customParameters[customParameter])
                 else:
-                    self.printLog('',True)
-            else: self.printLog("--- No master custom parameters found.",True)
+                    self.printLog('', True)
 
 
 
@@ -333,23 +313,44 @@ class AppWorker:
 
 
 
-        if options["RenameIndividualGlyphs"]:
-            if self.fontHasConfig == True and 'Rename Individual Glyphs' in json_data:
-                self.printLog('-- Renaming individual glyphs in progress.',False)
-                countGlyphs = 0
-                for line in json_data['Rename Individual Glyphs']:
-                    individualGlyphName = line.keys()[0]
-                    for sGlyph in line[individualGlyphName]:
-                        if font.glyphs[sGlyph]:
-                            newName = self.get_correct_new_name(individualGlyphName)
-                            print "------ %s found and will be renamed to %s" % (sGlyph, newName)
-                            font.glyphs[sGlyph].name = newName
-                            countGlyphs += 1
+        if options["RemoveGlyphOrder"]:
+            if options["RemoveAllCustomParameters"]:
+                self.printLog('-- Skipping RemoveGlyphOrder > Remove All custom parametr is do it all',True)
+            elif Glyphs.font.customParameters["glyphOrder"]:
+                self.printLog('-- Removing custom glyph order',False)
+                self.removeCustomParameter(font,'glyphOrder',False)
+            else: self.printLog('-- No custom glyph order parameter.',False)
+
+
+
+        if options["RemoveAllCustomParameters"]:
+            self.printLog('-- Removing all custom parameters',False)
+            parameters = []
+            for customParameter in font.customParameters:
+            	parameters.append(customParameter.name)
+            if len(parameters) > 0:
+                for customParameter in parameters:
+                	self.printLog('--- Removing parameter %s' % customParameter,False)
+                	self.removeCustomParameter(font,customParameter)
+                else: self.printLog('',True)
+            else: self.printLog("--- No custom parameters found.",True)
+
+
+
+        if options["RemoveAllMastersCustomParameters"]:
+            self.printLog('-- Removing all master custom parameters',False)
+            parameters = []
+            for master in font.masters:
+                for customParameter in master.customParameters:
+                    parameters.append(customParameter.name)
+            if len(parameters) > 0:
+                for master in font.masters:
+                    for customParameter in parameters:
+                        self.printLog('--- Removing master custom parameter %s from master %s' % (customParameter, master),False)
+                        del(master.customParameters[customParameter])
                 else:
-                    message = "-- %s Individual glyphs have been renamed." % countGlyphs
-                    self.printLog(message,True)
-            else:
-                self.printLog('-- Renaming individual glyphs skipped. Missing, corrupted json file. Or the file has no info for this operation.',False)
+                    self.printLog('',True)
+            else: self.printLog("--- No master custom parameters found.",True)
 
 
 
