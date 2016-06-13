@@ -33,32 +33,23 @@ class AppController:
         height += 40 + 20
 
         out.textApply = vanilla.TextBox((15, height, 80, 20), "Apply:", sizeStyle = 'regular')
-<<<<<<< HEAD
         out.checkBoxRenameIndividualGlyphs = vanilla.CheckBox((80, height, -15, 19), "Rename individual glyphs", value=False, sizeStyle = 'regular')
         height += 19
         out.checkBoxUpdateGlyphInfo = vanilla.CheckBox((80, height, -15, 19), "Apply Update Glyph Info", value=True, sizeStyle = 'regular')
-=======
-        out.checkBoxUpdateGlyphInfo = vanilla.CheckBox((80, height, -15, 19), "apply Update Glyph Info", value=True, sizeStyle = 'regular')
->>>>>>> ac77d7d341a8126b13e9db745b47ba30fd3fbed1
         height += 19
-        out.checkBoxAddSuffixesToLigatures = vanilla.CheckBox((80, height, -15, 19), "add suffixes to ligatures", value=False, sizeStyle = 'regular')
+        out.checkBoxAddSuffixesToLigatures = vanilla.CheckBox((80, height, -15, 19), "Add suffixes to ligatures", value=False, sizeStyle = 'regular')
         height += 19
-        out.checkBoxRenameSuffixes = vanilla.CheckBox((80, height, -15, 19), "rename suffixes", value=False, sizeStyle = 'regular')
+        out.checkBoxRenameSuffixes = vanilla.CheckBox((80, height, -15, 19), "Rename suffixes", value=False, sizeStyle = 'regular')
         height += 19
-<<<<<<< HEAD
-=======
-        out.checkBoxRenameIndividualGlyphs = vanilla.CheckBox((80, height, -15, 19), "rename individual glyphs", value=False, sizeStyle = 'regular')
-        height += 19
->>>>>>> ac77d7d341a8126b13e9db745b47ba30fd3fbed1
 
         height += 20
 
         out.textOptions = vanilla.TextBox((15, height, 80, 20), "Remove:", sizeStyle = 'regular')
-        out.checkBoxDeleteUnnecessaryGlyphs = vanilla.CheckBox((80, height, -15, 19), "unnecessary glyphs", value = False, sizeStyle = 'regular')
+        out.checkBoxDeleteUnnecessaryGlyphs = vanilla.CheckBox((80, height, -15, 19), "Delete Unnecessary Glyphs", value = False, sizeStyle = 'regular')
         height += 19
         out.checkBoxRemoveGlyphOrder = vanilla.CheckBox((80, height, -15, 19), "original glyph order ", value=False, sizeStyle = 'regular')
         height += 19
-        out.checkBoxRemoveAllCustomParameters = vanilla.CheckBox((80, height, -15, 19), "all font custom parameters", value=False, sizeStyle = 'regular')
+        out.checkBoxRemoveAllCustomParameters = vanilla.CheckBox((80, height, -15, 19), "all custom parameters", value=False, sizeStyle = 'regular')
         height += 19
         out.checkBoxRemoveAllMastersCustomParameters = vanilla.CheckBox((80, height, -15, 19), "all masters custom parameters", value=False, sizeStyle = 'regular')
         height += 19
