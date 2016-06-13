@@ -239,18 +239,17 @@ class AppWorker:
 
         if options["UpdateGlyphInfo"]:
             if font.disablesNiceNames:
-                self.printLog('-- WARNING: Custom naming / Nice names is on. Script will turn it off.',True)
+                self.printLog('-- WARNING: Custom naming / Nice names is on. Script will turn it off.',False)
                 font.disablesNiceNames = False
+            self.printLog('-- Updating all Glyphs Info (total %s)' % glyphs_total,False)
+            glyphsNames = []
+            for glyph in font.glyphs:
+                glyphsNames.append(glyph.name)
+            for glyphName in glyphsNames:
+                print "---updating %s" % glyphName
+                font.glyphs[glyphName].updateGlyphInfo()
             else:
-                self.printLog('-- Updating all Glyphs Info (total %s)' % glyphs_total,False)
-                glyphsNames = []
-                for glyph in font.glyphs:
-            	    glyphsNames.append(glyph.name)
-                for glyphName in glyphsNames:
-                    print "---updating %s" % glyphName
-            	    font.glyphs[glyphName].updateGlyphInfo()
-                else:
-                    self.printLog('', True)
+                self.printLog('', True)
 
 
 
@@ -292,15 +291,19 @@ class AppWorker:
                 for glyph in font.glyphs:
                     currentSuffix = os.path.splitext(glyph.name)
                     cS = currentSuffix[1]
-                    if currentSuffix[1] != "" and cS in wantedSuffixes:
+                    if cS != "" and cS in wantedSuffixes:
                         for key in range(len(keySuffixes)):
                             newSuffix = ""
-                            if currentSuffix[1] in json_data['Rename suffixes'][key][keySuffixes[key]]:
+                            if cS in json_data['Rename suffixes'][key][keySuffixes[key]]:
                                 newSuffix = keySuffixes[key]
                                 break
                         countGlyphs += 1
                         newGlyphName = self.get_correct_new_name(currentSuffix[0] + newSuffix)
                         renames.update({glyph.name: newGlyphName})
+                    else:
+                        for singleSuffix in wantedSuffixes:
+                            if singleSuffix in glyph.name:
+                                print "Achtung! Suffix %s without dot in glyph %s. WHat a mess!" % (singleSuffix,glyph.name)
                 else:
                     for key in renames:
                         print "---- %s will be renamed to %s" % (key, renames[key])
