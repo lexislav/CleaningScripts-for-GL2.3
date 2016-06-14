@@ -292,7 +292,6 @@ class AppWorker:
                         renames.update({glyph.name: newGlyphName})
                     else:
                         for singleSuffix in wantedSuffixes:
-                            singleSuffix
                             if (singleSuffix in currentSuffix[0]) and (len(singleSuffix) + glyph.name.find(singleSuffix)) == len(currentSuffix[0]):
                                 for key in range(len(keySuffixes)):
                                     newSuffix = ""
