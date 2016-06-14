@@ -178,7 +178,7 @@ class AppWorker:
         if self.file_is_ok(self.configFile) == True:
                 json_file = open(self.configFile).read()
                 if self.is_json(json_file) == True:
-                    json_data = self.get_json_data(json_file)
+                    self.json_data = self.get_json_data(json_file)
                     self.fontHasConfig = True
                     self.printLog("-- font has json file attached and file seems OK.",True)
                 else:
@@ -186,13 +186,13 @@ class AppWorker:
                     self.printLog("-- WARNING: font has json file attached but file is not valid json. Some actions may be skipped",True)
         elif self.generalConfigExists:
             self.fontHasConfig = True
-            json_data = self.generalConfigData
+            self.json_data = self.generalConfigData
             self.printLog("-- there is NO json file attached to the font. General script config will be used instead.",True)
         else:
             self.fontHasConfig = False
-            json_data = {}
+            self.json_data = {}
             self.printLog("-- there is NO json file attached to the font or to the script. Some steps may be skipped for that reason.",True)
-        return json_data
+        return self.json_data
 
     def step_removePUA(self):
         if self.options["RemovePUA"]:
@@ -424,7 +424,7 @@ class AppWorker:
         message = '-' * messlength
         self.printLog(message, True)
 
-        configFile = os.path.splitext(font.filepath)[0]+'.json'
+        self.configFile = os.path.splitext(self.font.filepath)[0]+'.json'
 
         self.font.disableUpdateInterface()
 
@@ -450,14 +450,14 @@ class AppWorker:
 
     def start(self, settings):
 
-        generalConfigFile = os.path.split(os.path.realpath("CleaningScripts_forGL2.3.py"))[0]+'/cleaningscripts_config.json'
+        self.generalConfigFile = os.path.split(os.path.realpath("CleaningScripts_forGL2.3.py"))[0]+'/cleaningscripts_config.json'
 
         self.outputLog = ''
         self.printLog('==== Starting ====',False)
 
         # Get general config. JSON should be located side by side with sript file.
-        if self.file_is_ok(generalConfigFile) == True:
-            json_file = open(generalConfigFile).read()
+        if self.file_is_ok(self.generalConfigFile) == True:
+            json_file = open(self.generalConfigFile).read()
             if self.is_json(json_file) == True:
                 self.generalConfigExists = True
                 self.generalConfigData = self.get_json_data(json_file)
