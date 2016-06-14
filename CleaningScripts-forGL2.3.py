@@ -157,6 +157,7 @@ class AppWorker:
         return json.loads(myjson)
 
     def get_all_font_names(self):
+        self.allGlyphsNames = []
         for glyph in self.font.glyphs:
             self.allGlyphsNames.append(glyph.name)
         return True
@@ -228,12 +229,12 @@ class AppWorker:
 
     def step_updateGlyphInfo(self):
         if self.options["UpdateGlyphInfo"]:
-            errorGlyphs = []
             if self.font.disablesNiceNames:
                 self.printLog('-- WARNING: Custom naming / Nice names is on. Script will turn it off.',False)
                 self.font.disablesNiceNames = False
             self.printLog('-- Updating all Glyphs Info (total %s)' % self.glyphs_total,False)
             self.get_all_font_names()
+            errorGlyphs = []
             for glyphName in self.allGlyphsNames:
                 print "---updating %s" % glyphName
                 if self.font.glyphs[glyphName]:
@@ -241,9 +242,10 @@ class AppWorker:
                 else:
                     errorGlyphs.append(glyphName)
             else:
-                if errorGlyphs > 0:
-                    self.printLog('-- WARNING: error updating % s glyphs.' % len(errorGlyphs), True)
+                if len(errorGlyphs) > 0:
+                    self.printLog('-- WARNING: error updating % s glyphs.' % len(errorGlyphs), False)
                     print '---- ERROR OCCURED IN THESE GLYPHS: %s' % ",".join(errorGlyphs)
+                    self.printLog('',True)
                 else:
                     self.printLog('', True)
 
