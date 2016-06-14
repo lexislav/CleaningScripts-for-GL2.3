@@ -226,7 +226,6 @@ class AppWorker:
             else:
                 self.printLog('-- Renaming individual glyphs skipped. Missing, corrupted json file. Or the file has no info for this operation.',False)
 
-
     def step_updateGlyphInfo(self):
         if self.options["UpdateGlyphInfo"]:
             if self.font.disablesNiceNames:
@@ -239,7 +238,6 @@ class AppWorker:
                 self.font.glyphs[glyphName].updateGlyphInfo()
             else:
                 self.printLog('', True)
-
 
     def step_addSuffixesToLigatures(self):
         if self.options["AddSuffixesToLigatures"]:
