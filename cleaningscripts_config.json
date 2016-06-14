@@ -36,7 +36,7 @@
     }],
 
 	"Suffixes for ligatures": [{
-		"liga": ["f_i", "f_l", "f_f_i"]
+		"liga": ["f_b", "f_h", "f_i", "f_j", "f_k", "f_l", "f_f_b", "f_f_h", "f_f_i", "f_f_j", "f_f_k"]
 	}, {
 		"dlig": ["T_h", "f_t", "s_p", "s_t", "c_t"]
 	}, {
@@ -86,15 +86,19 @@
 	}, {
 		"accountof": ["ac"]
 	}, {
-		"iacute_j.loclNLD": ["iacute_jacute", "ijacute"]
+		"iacute_j.loclNLD": ["iacute_jacute", "ijacute", "iacute_j.NLD"]
 	}, {
-		"Iacute_J.loclNLD": ["Iacute_Jacute", "IJacute"]
+		"Iacute_J.loclNLD": ["Iacute_Jacute", "IJacute", "Iacute_J.NLD"]
 	}, {
 		"leftBlackIndex": ["handleft"]
 	}, {
 		"rightBlackIndex": ["handright"]
 	}, {
 		"idotless.sc": ["Dotlessi.sc"]
+	}, {
+		"j_acutecomb": ["jacute"]
+	}, {
+		"J_acutecomb": ["Jacute"]
 	}, {
 		".notdef": ["undef"]
 	}, {
