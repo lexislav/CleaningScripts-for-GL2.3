@@ -172,8 +172,8 @@ class AppWorker:
         return correctedName
 
     def step_getConfiguration(self):
-        if self.file_is_ok(configFile) == True:
-                json_file = open(configFile).read()
+        if self.file_is_ok(self.configFile) == True:
+                json_file = open(self.configFile).read()
                 if self.is_json(json_file) == True:
                     json_data = self.get_json_data(json_file)
                     self.fontHasConfig = True
@@ -191,7 +191,7 @@ class AppWorker:
             self.printLog("-- there is NO json file attached to the font or to the script. Some steps may be skipped for that reason.",True)
 
     def step_removePUA(self):
-        if options["RemovePUA"]:
+        if self.options["RemovePUA"]:
             PUAglyphs = []
             self.printLog('-- Removing unicode for glyphs in PUA.',False)
             for glyph in font.glyphs:
@@ -202,7 +202,7 @@ class AppWorker:
             self.printLog("-- Unicode has been removed from %s glyphs originaly in PUA" % len(PUAglyphs),True)
 
     def step_renameIndividualGlyphs(self):
-        if options["RenameIndividualGlyphs"]:
+        if self.options["RenameIndividualGlyphs"]:
             if self.fontHasConfig == True and 'Rename Individual Glyphs' in json_data:
                 self.printLog('-- Renaming individual glyphs in progress.',False)
                 self.get_all_font_names
@@ -211,7 +211,7 @@ class AppWorker:
                     individualGlyphName = line.keys()[0]
                     for sGlyph in line[individualGlyphName]:
                         if font.glyphs[sGlyph]:
-                            newName = self.get_correct_new_name(individualGlyphName,font)
+                            newName = self.get_correct_new_name(individualGlyphName)
                             print "------ %s found and will be renamed to %s" % (sGlyph, newName)
                             font.glyphs[sGlyph].name = newName
                             countGlyphs += 1
@@ -222,7 +222,7 @@ class AppWorker:
                 self.printLog('-- Renaming individual glyphs skipped. Missing, corrupted json file. Or the file has no info for this operation.',False)
 
     def step_updateGlyphInfo(self):
-        if options["UpdateGlyphInfo"]:
+        if self.options["UpdateGlyphInfo"]:
             if font.disablesNiceNames:
                 self.printLog('-- WARNING: Custom naming / Nice names is on. Script will turn it off.',False)
                 font.disablesNiceNames = False
@@ -237,7 +237,7 @@ class AppWorker:
                 self.printLog('', True)
 
     def step_addSuffixesToLigatures(self):
-        if options["AddSuffixesToLigatures"]:
+        if self.options["AddSuffixesToLigatures"]:
             if self.fontHasConfig == True and 'Suffixes for ligatures' in json_data:
                 self.get_all_font_names
                 self.printLog('-- Adding suffixes to ligatures',False)
@@ -248,7 +248,7 @@ class AppWorker:
                     print "--- %s: checking existence of glyphs %s" % (key, ligatureGlyphsString)
                     for lglyphName in ligature[key]:
                         if font.glyphs[lglyphName]:
-                            newGlyphName = self.get_correct_new_name(lglyphName + "." + key,font)
+                            newGlyphName = self.get_correct_new_name(lglyphName + "." + key)
                             #print "------ %s found and will be renamed to %s" % (lglyphName, newGlyphName)
                             font.glyphs[lglyphName].name = newGlyphName
                             countGlyphs += 1
@@ -259,7 +259,7 @@ class AppWorker:
                 self.printLog('-- Adding suffixes to ligatures skipped for missing or corrupted json config file',False)
 
     def step_renameSuffixes(self):
-        if options["RenameSuffixes"]:
+        if self.options["RenameSuffixes"]:
             if self.fontHasConfig == True and 'Rename suffixes' in json_data:
                 self.get_all_font_names
                 self.printLog('-- Renaming suffixes in progress.',False)
@@ -284,7 +284,7 @@ class AppWorker:
                                 newSuffix = keySuffixes[key]
                                 break
                         countGlyphs += 1
-                        newGlyphName = self.get_correct_new_name(currentSuffix[0] + newSuffix,font)
+                        newGlyphName = self.get_correct_new_name(currentSuffix[0] + newSuffix)
                         renames.update({glyph.name: newGlyphName})
                     else:
                         for singleSuffix in wantedSuffixes:
@@ -310,8 +310,8 @@ class AppWorker:
                 self.printLog('-- Renaming suffixes skipped for missing, corrupted json file. Or the file has no info for this operation.',False)
 
     def step_removeGlyphOrder(self):
-        if options["RemoveGlyphOrder"]:
-            if options["RemoveAllCustomParameters"]:
+        if self.options["RemoveGlyphOrder"]:
+            if self.options["RemoveAllCustomParameters"]:
                 self.printLog('-- Skipping RemoveGlyphOrder > Remove All custom parametr is do it all',True)
             elif Glyphs.font.customParameters["glyphOrder"]:
                 self.printLog('-- Removing custom glyph order',True)
@@ -319,7 +319,7 @@ class AppWorker:
             else: self.printLog('-- No custom glyph order parameter.',True)
 
     def step_removeAllCustomParameters(self):
-        if options["RemoveAllCustomParameters"]:
+        if self.options["RemoveAllCustomParameters"]:
             self.printLog('-- Removing all custom parameters',False)
             parameters = []
             for customParameter in font.customParameters:
@@ -332,7 +332,7 @@ class AppWorker:
             else: self.printLog("--- No custom parameters found.",True)
 
     def step_removeAllMasterCustomParameters(self):
-        if options["RemoveAllMastersCustomParameters"]:
+        if self.options["RemoveAllMastersCustomParameters"]:
             self.printLog('-- Removing all master custom parameters',False)
             parameters = []
             for master in font.masters:
@@ -348,7 +348,7 @@ class AppWorker:
             else: self.printLog("--- No master custom parameters found.",True)
 
     def step_removeAllOTFeatures(self):
-        if options["RemoveAllFeatures"]:
+        if self.options["RemoveAllFeatures"]:
             self.printLog('-- Removing all OpenType features, classes, prefixes',False)
 
             features = []
@@ -384,7 +384,7 @@ class AppWorker:
             else: self.printLog("--- No OpenType feature prefixes found.",True)
 
     def step_removeUnnecessaryGlyphs(self):
-        if options["DeleteUnnecessaryGlyphs"]:
+        if self.options["DeleteUnnecessaryGlyphs"]:
             if self.fontHasConfig == True and 'Unnecessary Glyphs' in json_data:
                 self.printLog('-- Removing Unnecessary Glyphs defined in attached file',False)
                 countGlyphs = 0
@@ -401,7 +401,8 @@ class AppWorker:
 
 
     def processFont(self, font, onlySelected, options):
-
+        self.options = options
+        self.font = font
         glyphs_total = len(font.glyphs)
         message = '# Proccesing font: ' + font.familyName + ' (contains %s glyphs)' % glyphs_total
         messlength = len(message)
@@ -413,17 +414,17 @@ class AppWorker:
 
         Font.disableUpdateInterface()
 
-        self.step_getConfiguration
-        self.step_removePUA
-        self.step_renameIndividualGlyphs
-        self.step_updateGlyphInfo
-        self.step_addSuffixesToLigatures
-        self.step_renameSuffixes
-        self.step_removeGlyphOrder
-        self.step_removeAllCustomParameters
-        self.step_removeAllMasterCustomParameters
-        self.step_removeAllOTFeatures
-        self.step_removeUnnecessaryGlyphs
+        self.step_getConfiguration()
+        self.step_removePUA()
+        self.step_renameIndividualGlyphs()
+        self.step_updateGlyphInfo()
+        self.step_addSuffixesToLigatures()
+        self.step_renameSuffixes()
+        self.step_removeGlyphOrder()
+        self.step_removeAllCustomParameters()
+        self.step_removeAllMasterCustomParameters()
+        self.step_removeAllOTFeatures()
+        self.step_removeUnnecessaryGlyphs()
 
         Font.enableUpdateInterface()
         Glyphs.redraw()
