@@ -242,8 +242,8 @@ class AppWorker:
                     errorGlyphs.append(glyphName)
             else:
                 if errorGlyphs > 0:
-                    self.printLog('-- WARNING: error updating % s glyphs.' % len(errorGlyphs), False)
-                    print('---- ERROR OCCURED IN THESE GLYPHS: %s' % ",".join(errorGlyphs), True)
+                    self.printLog('-- WARNING: error updating % s glyphs.' % len(errorGlyphs), True)
+                    print '---- ERROR OCCURED IN THESE GLYPHS: %s' % ",".join(errorGlyphs)
                 else:
                     self.printLog('', True)
 
@@ -306,8 +306,8 @@ class AppWorker:
                                     newSuffix = keySuffixes[i]
                                     break
                             countGlyphs += 1
-                            print "---- EXTRA: ",singleSuffix," / ",currentSuffix[0]," in ",glyph," will be replaced with ",newSuffix
                             newGlyphName = currentSuffix[0].replace(singleSuffix,newSuffix) + currentSuffix[1]
+                            print "---- EXTRA: ",singleSuffix," / ",currentSuffix[0]," in ",glyph," will be replaced with ",newSuffix," to newname: ",newGlyphName
                             renames.update({glyph: newGlyphName})
                 else:
                     for key in renames:
