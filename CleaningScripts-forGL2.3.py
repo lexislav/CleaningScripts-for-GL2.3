@@ -208,21 +208,24 @@ class AppWorker:
         if self.options["RenameIndividualGlyphs"]:
             if self.fontHasConfig == True and 'Rename Individual Glyphs' in self.json_data:
                 self.printLog('-- Renaming individual glyphs in progress.',False)
-                self.get_all_font_names
                 countGlyphs = 0
+                renames = {}
                 for line in self.json_data['Rename Individual Glyphs']:
                     individualGlyphName = line.keys()[0]
                     for sGlyph in line[individualGlyphName]:
                         if self.font.glyphs[sGlyph]:
                             newName = self.get_correct_new_name(individualGlyphName)
-                            print "------ %s found and will be renamed to %s" % (sGlyph, newName)
-                            self.font.glyphs[sGlyph].name = newName
+                            renames.update({sGlyph: newName})
                             countGlyphs += 1
                 else:
+                    for key in renames:
+                        print "------ %s found and will be renamed to %s" % (key, renames[key])
+                        self.font.glyphs[key].name = renames[key]
                     message = "-- %s Individual glyphs have been renamed." % countGlyphs
                     self.printLog(message,True)
             else:
                 self.printLog('-- Renaming individual glyphs skipped. Missing, corrupted json file. Or the file has no info for this operation.',False)
+
 
     def step_updateGlyphInfo(self):
         if self.options["UpdateGlyphInfo"]:
@@ -230,14 +233,13 @@ class AppWorker:
                 self.printLog('-- WARNING: Custom naming / Nice names is on. Script will turn it off.',False)
                 self.font.disablesNiceNames = False
             self.printLog('-- Updating all Glyphs Info (total %s)' % self.glyphs_total,False)
-            glyphsNames = []
-            for glyph in self.font.glyphs:
-                glyphsNames.append(glyph.name)
-            for glyphName in glyphsNames:
-                #print "---updating %s" % glyphName
+            self.get_all_font_names
+            for glyphName in self.allGlyphsNames:
+                print "---updating %s" % glyphName
                 self.font.glyphs[glyphName].updateGlyphInfo()
             else:
                 self.printLog('', True)
+
 
     def step_addSuffixesToLigatures(self):
         if self.options["AddSuffixesToLigatures"]:
@@ -260,6 +262,7 @@ class AppWorker:
                     self.printLog(message,True)
             else:
                 self.printLog('-- Adding suffixes to ligatures skipped for missing or corrupted json config file',False)
+        self.get_all_font_names
 
     def step_renameSuffixes(self):
         if self.options["RenameSuffixes"]:
@@ -311,6 +314,7 @@ class AppWorker:
             else:
                 print self.json_data
                 self.printLog('-- Renaming suffixes skipped for missing, corrupted json file. Or the file has no info for this operation.',False)
+        self.get_all_font_names
 
     def step_removeGlyphOrder(self):
         if self.options["RemoveGlyphOrder"]:
@@ -401,13 +405,14 @@ class AppWorker:
                 else: self.printLog("%s glyphs has been removed." % countGlyphs,True)
             else:
                 self.printLog('-- Removing Unnecessary Glyphs skipped for missing or corrupted json config file',False)
+        self.get_all_font_names
 
 
     def processFont(self, font, onlySelected, options):
         self.options = options
         self.font = font
         self.glyphs_total = len(self.font.glyphs)
-        message = '# Proccesing font: ' + font.familyName + ' (contains %s glyphs)' % self.glyphs_total
+        message = '# Proccesing font: ' + self.font.familyName + ' (contains %s glyphs)' % self.glyphs_total
         messlength = len(message)
         self.printLog(message, False)
         message = '-' * messlength
@@ -421,6 +426,11 @@ class AppWorker:
 
         self.step_removePUA()
         self.step_renameIndividualGlyphs()
+        for i in range(len(self.font)):
+            if self.font.glyphs[i].name != font.glyphs[i].name:
+                print "WARNING: % / %" % (self.font.glyphs[i].name, font.glypsh[i].name)
+        else: print "Comaprision done."
+        font = self.font
         self.step_updateGlyphInfo()
         self.step_addSuffixesToLigatures()
         self.step_renameSuffixes()
