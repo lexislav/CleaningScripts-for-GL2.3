@@ -12,8 +12,7 @@ import traceback
 
 DefaultKeys = {
     "a" : ["aacute", "adieresis", "agrave"],
-	"a.sc" : ["adieresis.sc"],
-    "blah" : ["boo","foo","uuu"]
+	"a.sc" : ["adieresis.sc"]
 }
 
 font = Glyphs.font
