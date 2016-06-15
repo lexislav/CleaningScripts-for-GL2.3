@@ -24,9 +24,9 @@ def testKernignInfo(glyph,parentGlyph):
 def copyKerningInfo(glyph,parentGlyph):
     parentLeftKerningGroup = font.glyphs[parentGlyph].leftKerningGroup
     parentRightKerningGroup = font.glyphs[parentGlyph].rightKerningGroup
-    print "%s\'s current kerning L:%s R:%s will be updated from source glyph (%s) to L:%s, R:%s" % (glyph,glyph.leftKerningGroup,glyph.rightKerningGroup,parentGlyph,parentLeftKerningGroup,parentRightKerningGroup)
-    print glyph.leftKerningGroup
-    print glyph.rightKerningGroup
+    print "%s\'s current kerning L:%s R:%s will be updated from source glyph (%s) to L:%s, R:%s" % (glyph.name,glyph.leftKerningGroup,glyph.rightKerningGroup,parentGlyph,parentLeftKerningGroup,parentRightKerningGroup)
+    glyph.leftKerningGroup = parentLeftKerningGroup
+    glyph.rightKerningGroup = parentRightKerningGroup
 
 
 def getAllValues():
