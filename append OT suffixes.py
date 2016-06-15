@@ -2,6 +2,9 @@
 # encoding: utf-8
 # Copyright: Alexnadr Hudeček & Designiq, 2016
 
+SEARCH_THIS_CATEGORIES = ['Letter','Number']
+
+#DO NOT touch following definitions
 font = Glyphs.font
 renames = {}
 totalNumber = 0
@@ -10,7 +13,8 @@ def appendFeatureSuffix(feature):
 	glyphsCount = 0
 	featureSet = []
 	global renames
-	glyphsSet = (glyph for glyph in font.glyphs if glyph.category in ['Letter','Number'])
+    global SEARCH_THIS_CATEGORIES
+	glyphsSet = (glyph for glyph in font.glyphs if glyph.category in SEARCH_THIS_CATEGORIES)
 	for glyph in glyphsSet:
 		searchedGlyph = " by "+glyph.name + ";"
 		searchContentGlyph = "\' by "+glyph.name + ";"
