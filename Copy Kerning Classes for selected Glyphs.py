@@ -21,6 +21,14 @@ def testKernignInfo(glyph,parentGlyph):
     print glyph.name,": LKG-",glyph.leftKerningGroup,", RKG-",glyph.rightKerningGroup,", LMK-",glyph.leftMetricsKey,", RMK-",glyph.rightMetricsKey
     print parentGlyph,": LKG-",font.glyphs[parentGlyph].leftKerningGroup,", RKG-",font.glyphs[parentGlyph].rightKerningGroup,", LMK-",font.glyphs[parentGlyph].leftMetricsKey,", RMK-",font.glyphs[parentGlyph].rightMetricsKey
 
+def copyKerningInfo(glyph,parentGlyph):
+    parentLeftKerningGroup = font.glyphs[parentGlyph].leftKerningGroup
+    parentRightKerningGroup = font.glyphs[parentGlyph].rightKerningGroup
+    print "%s\'s current kerning L:%s R:%s will be updated from source glyph (%s) to L:%s, R:%s" % (glyph,glyph.leftKerningGroup,glyph.rightKerningGroup,parentGlyph,parentLeftKerningGroup,parentRightKerningGroup)
+    print glyph.leftKerningGroup
+    print glyph.rightKerningGroup
+
+
 def getAllValues():
     DefaultValues = []
     for key in DefaultKeys:
@@ -42,7 +50,8 @@ def copyKerningClasses(glyphs):
             if parentGlyph != "":
                 print "Glyph %s has paraent glyph %s for copying kerning" % ( glyph.name, parentGlyph )
                 if font.glyphs[parentGlyph]:
-                    testKernignInfo(glyph,parentGlyph)
+                    #testKernignInfo(glyph,parentGlyph)
+                    copyKerningInfo(glyph,parentGlyph)
                 else:
                     print "Oh, no, parent glyph is not in this font."
             else:
@@ -53,7 +62,7 @@ def copyKerningClasses(glyphs):
 
 
 def app():
-    print "*** Start copiing Kernign classes on selected glyphs ***\n"
+    print "*** Start copying Kernign classes on selected glyphs ***\n"
 
     glyphsInSelection = len(font.selection)
     if glyphsInSelection <= 1:
