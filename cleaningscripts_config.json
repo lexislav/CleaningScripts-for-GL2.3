@@ -82,6 +82,8 @@
 	}, {
 		"ring.case": ["Ring"]
 	}, {
+		"commaturnedabovecomb": ["commaaccent.alt", "revcommaaccent"]
+	}, {
 		"careof": ["co"]
 	}, {
 		"accountof": ["ac"]
