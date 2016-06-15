@@ -22,7 +22,6 @@ def appendFeatureSuffix(feature):
 		newGlyphName = glyph.name + "." + feature.name
 		if searchedGlyph in feature.code:
 			if searchContentGlyph not in feature.code:
-				#print "%s belongs to feature %s and will be renamed to %s" % (glyph.name,feature.name,newGlyphName)
 				glyphsCount += 1
 				featureSet.append( (glyph.name,newGlyphName) )
 			#else:
