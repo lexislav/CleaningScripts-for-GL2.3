@@ -2,20 +2,34 @@
 # encoding: utf-8
 # Copyright: Alexnadr Hudeček & Designiq, 2016
 
-import sys
 import os
-from GlyphsApp import *
-import objc
-from AppKit import *
-from Foundation import *
-import traceback
 
-DefaultKeys = {
-    "a" : ["aacute", "adieresis", "agrave"],
-	"a.sc" : ["adieresis.sc"]
-}
+KEY_LETTERS = [
+"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "AE", "OE", "DZ",
+"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "ae", "oe"
+]
 
+ACCENTS = [
+"acute", "acutedotaccent", "caron", "carondotaccent", "cedilla", "cedillaacute", "hungarumlaut", "ogonek", "ogonekmacron", "ring", "ringacute",
+"ringbelow", "hookabove", "dieresis", "dieresismacron", "dieresisacute", "dieresiscaron", "dieresisgrave", "dieresisbelow", "barreddieresis",
+"grave", "dblgrave", "circumflex", "circumflextilde", "circumflexhookabove", "circumflexacute", "circumflexdotbelow", "circumflexgrave",
+"circumflexbelow", "dotaccent", "dotaccentmacron", "dotbelow", "dotbelowdotaccent", "dotbelowmacron", "circumflextilde", "macron", "macronacute",
+"macrongrave", "slash", "slashacute", "tilde", "tildeacute", "tildedieresis", "tildemacron", "tildebelow", "hook", "stroke", "linebelow",
+"palatalhook", "bar", "breve", "breveacute", "brevegrave", "brevedotbelow", "invertedbreve", "brevehookabove", "brevetilde", "dot",
+"dotmacron", "dotless", "curl"
+]
+
+#DO NOT edit bellow this line
+DefaultKeys = {}
 font = Glyphs.font
+
+def renderDefaultKeys():
+	global DefaultKeys
+	for letter in KEY_LETTERS:
+		letterList = []
+		for accent in ACCENTS:
+			letterList.append(letter + accent)
+		DefaultKeys.update({letter:letterList})
 
 def testKernignInfo(glyph,parentGlyph):
     print glyph.name,": LKG-",glyph.leftKerningGroup,", RKG-",glyph.rightKerningGroup,", LMK-",glyph.leftMetricsKey,", RMK-",glyph.rightMetricsKey
@@ -24,9 +38,19 @@ def testKernignInfo(glyph,parentGlyph):
 def copyKerningInfo(glyph,parentGlyph):
     parentLeftKerningGroup = font.glyphs[parentGlyph].leftKerningGroup
     parentRightKerningGroup = font.glyphs[parentGlyph].rightKerningGroup
-    print "%s\'s current kerning L:%s R:%s will be updated from source glyph (%s) to L:%s, R:%s" % (glyph.name,glyph.leftKerningGroup,glyph.rightKerningGroup,parentGlyph,parentLeftKerningGroup,parentRightKerningGroup)
-    glyph.leftKerningGroup = parentLeftKerningGroup
-    glyph.rightKerningGroup = parentRightKerningGroup
+    if glyph.leftKerningGroup != parentLeftKerningGroup or glyph.rightKerningGroup <> parentRightKerningGroup:
+        print "%s\'s current kerning L:%s R:%s will be updated from source glyph (%s) to L:%s, R:%s" % (glyph.name,glyph.leftKerningGroup,glyph.rightKerningGroup,parentGlyph,parentLeftKerningGroup,parentRightKerningGroup)
+        if parentLeftKerningGroup:
+            glyph.leftKerningGroup = parentLeftKerningGroup
+        else:
+            font.glyphs[glyph.name].leftKerningGroup = ""
+        if parentRightKerningGroup:
+            glyph.rightKerningGroup = parentRightKerningGroup
+        else:
+            glyph.rightKerningGroup = ""
+        #print "%s\'s kerning values after change L:%s R:%s" % (glyph.name,glyph.leftKerningGroup,glyph.rightKerningGroup)
+    else:
+        print "Glyph %s has definition for source glyph %s for copy it\'s kerning, but kerning is already equal." % ( glyph.name, parentGlyph )
 
 
 def getAllValues():
@@ -46,9 +70,9 @@ def copyKerningClasses(glyphs):
     definition = getAllValues()
     for glyph in glyphs:
         if glyph.name in definition:
-            parentGlyph = getParentGlyph(glyph.name)
+            noSuffixedGlyphName = os.path.splitext(glyph.name)[0]
+            parentGlyph = getParentGlyph(noSuffixedGlyphName)
             if parentGlyph != "":
-                print "Glyph %s has definition for source glyph %s for copy it\'s kerning" % ( glyph.name, parentGlyph )
                 if font.glyphs[parentGlyph]:
                     #testKernignInfo(glyph,parentGlyph)
                     copyKerningInfo(glyph,parentGlyph)
@@ -68,6 +92,7 @@ def app():
     if glyphsInSelection <= 1:
     	print "\nWARNING: At least two glyphs need to be selected for script to run!\n"
     else:
+        renderDefaultKeys()
         copyKerningClasses(font.selection)
 	print "*** Done ****"
 
