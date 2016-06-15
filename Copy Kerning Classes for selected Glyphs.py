@@ -69,8 +69,8 @@ def getParentGlyph(name):
 def copyKerningClasses(glyphs):
     definition = getAllValues()
     for glyph in glyphs:
-        if glyph.name in definition:
-            noSuffixedGlyphName = os.path.splitext(glyph.name)[0]
+        noSuffixedGlyphName = os.path.splitext(glyph.name)[0]
+        if glyph.name in definition or noSuffixedGlyphName in definition:
             parentGlyph = getParentGlyph(noSuffixedGlyphName)
             if parentGlyph != "":
                 if font.glyphs[parentGlyph]:
