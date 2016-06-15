@@ -1,8 +1,9 @@
-#MenuTitle: Append suffix by OT feature
+#MenuTitle: Add suffixes to ligatures based on OT features
 # encoding: utf-8
 # Copyright: Alexnadr Hudeček & Designiq, 2016
 
 SEARCH_THIS_CATEGORIES = ['Letter','Number']
+USE_FEATURES = ['liga', 'dlig', 'hlig', 'rlig']
 
 #DO NOT touch following definitions
 font = Glyphs.font
@@ -13,12 +14,12 @@ def appendFeatureSuffix(feature):
 	glyphsCount = 0
 	featureSet = []
 	global renames
-    global SEARCH_THIS_CATEGORIES
+	global SEARCH_THIS_CATEGORIES
 	glyphsSet = (glyph for glyph in font.glyphs if glyph.category in SEARCH_THIS_CATEGORIES)
 	for glyph in glyphsSet:
-		searchedGlyph = " by "+glyph.name + ";"
-		searchContentGlyph = "\' by "+glyph.name + ";"
-		newGlyphName = glyph.name+"."+feature.name
+		searchedGlyph = " by " + glyph.name + ";"
+		searchContentGlyph = "\' by " + glyph.name + ";"
+		newGlyphName = glyph.name + "." + feature.name
 		if searchedGlyph in feature.code:
 			if searchContentGlyph not in feature.code:
 				#print "%s belongs to feature %s and will be renamed to %s" % (glyph.name,feature.name,newGlyphName)
@@ -31,7 +32,10 @@ def appendFeatureSuffix(feature):
 
 def collectRenames():
 	global totalNumber
-	for feature in font.features:
+	global USE_FEATURES
+	features = (feature for feature in font.features if feature.name in USE_FEATURES)
+	for feature in features:
+		print feature
 		countGlyphs = 0
 		countGlyphs += appendFeatureSuffix(feature)
 		totalNumber += countGlyphs
