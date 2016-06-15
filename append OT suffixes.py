@@ -33,11 +33,11 @@ def collectRenames():
 		totalNumber += countGlyphs
 
 def app():
-    print "*** Start copiing Kernign classes on selected glyphs ***\n"
-	global renames
-	collectRenames()
-	print "%s glyphs will renamed by it's OT feature.\n" % totalNumber
-	for feature in renames:
+    print "*** Starting analyze the font and it's OT features ***\n"
+    global renames
+    collectRenames()
+    print "%s glyphs will renamed by it's OT feature.\n" % totalNumber
+    for feature in renames:
 		print "Woring with %s feature" % feature
 		for key,newGlyphName in renames[feature]:
 			print "> %s will be renamed to %s" % (key,newGlyphName)
