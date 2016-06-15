@@ -35,7 +35,6 @@ def collectRenames():
 	global USE_FEATURES
 	features = (feature for feature in font.features if feature.name in USE_FEATURES)
 	for feature in features:
-		print feature
 		countGlyphs = 0
 		countGlyphs += appendFeatureSuffix(feature)
 		totalNumber += countGlyphs
@@ -44,9 +43,9 @@ def app():
     print "*** Starting analyze the font and it's OT features ***\n"
     global renames
     collectRenames()
-    print "%s glyphs will renamed by it's OT feature.\n" % totalNumber
+    print "%s glyphs will get suffix by it's OT feature.\n" % totalNumber
     for feature in renames:
-		print "Woring with %s feature" % feature
+		print "Working with %s feature" % feature
 		for key,newGlyphName in renames[feature]:
 			print "> %s will be renamed to %s" % (key,newGlyphName)
 			if font.glyphs[key]:
