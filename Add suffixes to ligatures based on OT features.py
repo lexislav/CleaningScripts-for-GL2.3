@@ -6,27 +6,50 @@ SEARCH_THIS_CATEGORIES = ['Letter','Number']
 USE_FEATURES = ['liga', 'dlig', 'hlig', 'rlig']
 
 #DO NOT touch following definitions
+import re
+import os
+
 font = Glyphs.font
 renames = {}
 totalNumber = 0
 
-def appendFeatureSuffix(feature):
+def get_feature_code(code):
+	return code.split("\n")
+
+def get_code_line(searchedGlyph,codeL):
+    for line in codeL:
+        if searchedGlyph in line:
+            return line
+    else:
+        return None
+
+def get_first_line_name(s,f):
+    s = s[4:]
+    s = s[:-len(f)]
+    s = re.sub(r"\s+", '_', s)
+    return s
+
+def appendFeatureSuffix(feature,code,codeL):
 	glyphsCount = 0
 	featureSet = []
 	global renames
 	global SEARCH_THIS_CATEGORIES
 	glyphsSet = (glyph for glyph in font.glyphs if glyph.category in SEARCH_THIS_CATEGORIES)
 	for glyph in glyphsSet:
-		searchedGlyph = " by " + glyph.name + ";"
-		searchContentGlyph = "\' by " + glyph.name + ";"
-		newGlyphName = glyph.name + "." + feature.name
-		if searchedGlyph in feature.code:
-			if searchContentGlyph not in feature.code:
-				glyphsCount += 1
+		splittedGlyphName = os.path.splitext(glyph.name)
+		searchedGlyph = " by " + splittedGlyphName[0] + ";"
+		searchContentGlyph = "\' by " + splittedGlyphName[0] + ";"
+		newGlyphName = splittedGlyphName[0] + "." + feature + splittedGlyphName[1]
+		if searchedGlyph in code:
+			if searchContentGlyph not in code:
+				codeLine = get_code_line(searchedGlyph,codeL)
+				first_line_name = get_first_line_name(codeLine,searchedGlyph)
+				if first_line_name not in newGlyphName:
+					newGlyphName = first_line_name + "." + feature + splittedGlyphName[1]
 				featureSet.append( (glyph.name,newGlyphName) )
-			#else:
-			#	print "%s context thing, wont be renamed" % glyph.name
-	if len(featureSet) > 0: renames.update({feature.name:featureSet})
+				glyphsCount += 1
+	if len(featureSet) > 0:
+		renames.update({feature:featureSet})
 	return glyphsCount
 
 def collectRenames():
@@ -34,12 +57,14 @@ def collectRenames():
 	global USE_FEATURES
 	features = (feature for feature in font.features if feature.name in USE_FEATURES)
 	for feature in features:
+		arrayedCode = get_feature_code(feature.code)
 		countGlyphs = 0
-		countGlyphs += appendFeatureSuffix(feature)
+		countGlyphs += appendFeatureSuffix(feature.name,feature.code,arrayedCode)
 		totalNumber += countGlyphs
 
-def app():
+def app(font):
     print "*** Starting analyze the font and it's OT features ***\n"
+    font.disableUpdateInterface()
     global renames
     collectRenames()
     print "%s glyphs will get suffix by it's OT feature.\n" % totalNumber
@@ -53,6 +78,8 @@ def app():
 				print "! WARNING: This pair has a problem. It was propably renamed with another feature already."
 		else:
 			print "\n"
+    font.enableUpdateInterface()
+    Glyphs.redraw()
     print "*** Done ****"
 
-app()
+app(font)
