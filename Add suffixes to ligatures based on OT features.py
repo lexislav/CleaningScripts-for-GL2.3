@@ -4,6 +4,7 @@
 
 SEARCH_THIS_CATEGORIES = ['Letter','Number']
 USE_FEATURES = ['liga', 'dlig', 'hlig', 'rlig']
+NOT_SEPARABLE_SUFFIXES = ['.short']
 
 #DO NOT touch following definitions
 import re
@@ -34,15 +35,20 @@ def appendFeatureSuffix(feature,code,codeL):
 	featureSet = []
 	global renames
 	global SEARCH_THIS_CATEGORIES
+	global NOT_SEPARABLE_SUFFIXES
 	glyphsSet = (glyph for glyph in font.glyphs if glyph.category in SEARCH_THIS_CATEGORIES)
 	for glyph in glyphsSet:
 		splittedGlyphName = os.path.splitext(glyph.name)
-		searchedGlyph = " by " + splittedGlyphName[0] + ";"
-		searchContentGlyph = "\' by " + splittedGlyphName[0] + ";"
+		if splittedGlyphName[1] in NOT_SEPARABLE_SUFFIXES:
+			searchedGlyph = " by " + glyph.name + ";"
+			searchContentGlyph = "\' by " + glyph.name + ";"
+		else:
+			searchedGlyph = " by " + splittedGlyphName[0] + ";"
+			searchContentGlyph = "\' by " + splittedGlyphName[0] + ";"
 		newGlyphName = splittedGlyphName[0] + "." + feature + splittedGlyphName[1]
 		if searchedGlyph in code:
-			if searchContentGlyph not in code:
-				codeLine = get_code_line(searchedGlyph,codeL)
+			codeLine = get_code_line(searchedGlyph,codeL)
+			if "\'" not in codeLine:
 				first_line_name = get_first_line_name(codeLine,searchedGlyph)
 				if first_line_name not in newGlyphName:
 					newGlyphName = first_line_name + "." + feature + splittedGlyphName[1]
@@ -55,7 +61,10 @@ def appendFeatureSuffix(feature,code,codeL):
 def collectRenames():
 	global totalNumber
 	global USE_FEATURES
-	features = (feature for feature in font.features if feature.name in USE_FEATURES)
+	features = []
+	for feature in font.features:
+		if feature.name in USE_FEATURES:
+			features.append(feature)
 	for feature in features:
 		arrayedCode = get_feature_code(feature.code)
 		countGlyphs = 0
