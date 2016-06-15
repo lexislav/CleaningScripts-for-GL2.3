@@ -1,4 +1,4 @@
-#MenuTitle: Append OT feature suffix to glyphs
+#MenuTitle: Append suffix by OT feature
 # encoding: utf-8
 # Copyright: Alexnadr Hudeček & Designiq, 2016
 
