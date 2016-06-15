@@ -44,7 +44,7 @@ def app():
 			if font.glyphs[key]:
 				font.glyphs[key].name = newGlyphName
 			else:
-				print "! WARNING: This pair has a problem. It was renamed with another feature propably."
+				print "! WARNING: This pair has a problem. It was propably renamed with another feature already."
 		else:
 			print "\n"
     print "*** Done ****"
