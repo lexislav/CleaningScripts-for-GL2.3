@@ -48,7 +48,7 @@ def copyKerningClasses(glyphs):
         if glyph.name in definition:
             parentGlyph = getParentGlyph(glyph.name)
             if parentGlyph != "":
-                print "Glyph %s has paraent glyph %s for copying kerning" % ( glyph.name, parentGlyph )
+                print "Glyph %s has definition for source glyph %s for copy it\'s kerning" % ( glyph.name, parentGlyph )
                 if font.glyphs[parentGlyph]:
                     #testKernignInfo(glyph,parentGlyph)
                     copyKerningInfo(glyph,parentGlyph)
