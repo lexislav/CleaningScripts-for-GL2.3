@@ -38,19 +38,19 @@ def testKernignInfo(glyph,parentGlyph):
 def copyKerningInfo(glyph,parentGlyph):
     parentLeftKerningGroup = font.glyphs[parentGlyph].leftKerningGroup
     parentRightKerningGroup = font.glyphs[parentGlyph].rightKerningGroup
-    if glyph.leftKerningGroup != parentLeftKerningGroup or glyph.rightKerningGroup <> parentRightKerningGroup:
+    if glyph.leftKerningGroup != parentLeftKerningGroup or glyph.rightKerningGroup != parentRightKerningGroup:
         print "%s\'s current kerning L:%s R:%s will be updated from source glyph (%s) to L:%s, R:%s" % (glyph.name,glyph.leftKerningGroup,glyph.rightKerningGroup,parentGlyph,parentLeftKerningGroup,parentRightKerningGroup)
         if parentLeftKerningGroup:
             glyph.leftKerningGroup = parentLeftKerningGroup
         else:
-            font.glyphs[glyph.name].leftKerningGroup = ""
+            glyph.leftKerningGroup.leftKerningGroup = ""
         if parentRightKerningGroup:
             glyph.rightKerningGroup = parentRightKerningGroup
         else:
             glyph.rightKerningGroup = ""
-        #print "%s\'s kerning values after change L:%s R:%s" % (glyph.name,glyph.leftKerningGroup,glyph.rightKerningGroup)
-    else:
-        print "Glyph %s has definition for source glyph %s for copy it\'s kerning, but kerning is already equal." % ( glyph.name, parentGlyph )
+        print "%s\'s kerning values after change L:%s R:%s" % (glyph.name,glyph.leftKerningGroup,glyph.rightKerningGroup)
+    #else:
+        #print "Glyph %s has definition for source glyph %s for copy it\'s kerning, but kerning is already equal." % ( glyph.name, parentGlyph )
 
 
 def getAllValues():
@@ -80,8 +80,8 @@ def copyKerningClasses(glyphs):
                     print "Oh, no, parent glyph is not in this font."
             else:
                 print "Wow, error :-/"
-        else:
-            print "There is no definition for this glyph (%s)" % glyph.name
+        #else:
+            #print "There is no definition for this glyph (%s)" % glyph.name
 
 
 
