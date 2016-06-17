@@ -16,7 +16,7 @@ ACCENTS = [
 "circumflexbelow", "dotaccent", "dotaccentmacron", "dotbelow", "dotbelowdotaccent", "dotbelowmacron", "circumflextilde", "macron", "macronacute",
 "macrongrave", "slash", "slashacute", "tilde", "tildeacute", "tildedieresis", "tildemacron", "tildebelow", "hook", "stroke", "linebelow",
 "palatalhook", "bar", "breve", "breveacute", "brevegrave", "brevedotbelow", "invertedbreve", "brevehookabove", "brevetilde", "dot",
-"dotmacron", "dotless", "curl"
+"dotmacron", "dotless", "curl", "commaaccent"
 ]
 
 #DO NOT edit bellow this line
