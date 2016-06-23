@@ -12,7 +12,7 @@
     }, {
         ".lf": [".LP", ".lin", ".fitted", ".LF"]
     }, {
-        ".tf": [".LT", ".tab", ".tn", ".TF"]
+        ".tf": [".LT", ".tab", ".tn", ".TF", ".tnumlnum"]
     }, {
         ".tf.zero": [".alt_TF"]
     }, {
