@@ -22,7 +22,7 @@ class AppController:
 
     def getWindow(self):
 
-        out = vanilla.FloatingWindow((355, 335), "Cleaning Scripts v0.9")
+        out = vanilla.FloatingWindow((385, 335), "Cleaning Scripts v0.9")
 
         height = 20
 
@@ -38,6 +38,8 @@ class AppController:
         out.checkBoxUpdateGlyphInfo = vanilla.CheckBox((80, height, -15, 19), "Apply Update Glyph Info", value=True, sizeStyle = 'regular')
         height += 19
         out.checkBoxAddSuffixesToLigatures = vanilla.CheckBox((80, height, -15, 19), "Add suffixes to ligatures", value=False, sizeStyle = 'regular')
+        height += 19
+        out.checkBoxAddSuffixesToLigaturesOTCode = vanilla.CheckBox((80, height, -15, 19), "Add suffixes to ligatures based on OT code", value=False, sizeStyle = 'regular')
         height += 19
         out.checkBoxRenameSuffixes = vanilla.CheckBox((80, height, -15, 19), "Rename suffixes", value=False, sizeStyle = 'regular')
         height += 19
