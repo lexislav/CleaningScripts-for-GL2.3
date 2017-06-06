@@ -344,7 +344,8 @@ class AppWorker:
                 	self.printLog('--- Removing parameter %s' % customParameter,False)
                 	self.removeCustomParameter(self.font,customParameter)
                 else: self.printLog('',True)
-            else: self.printLog("--- No custom parameters found.",True)
+            else:
+                self.printLog("--- No custom parameters found.",True)
 
     def step_removeAllMasterCustomParameters(self):
         if self.options["RemoveAllMastersCustomParameters"]:
