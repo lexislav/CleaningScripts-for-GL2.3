@@ -1,4 +1,4 @@
-#MenuTitle: Cleaning Scripts 0.9 for GL2.3
+#MenuTitle: Cleaning Scripts 0.9.1 for GL2.3
 #encoding: utf-8
 """
 CleaningScripts-forGL2.3.py
@@ -248,6 +248,7 @@ class AppWorker:
                     self.printLog('',True)
                 else:
                     self.printLog('', True)
+            self.get_all_font_names()
 
     def step_addSuffixesToLigatures(self):
         if self.options["AddSuffixesToLigatures"]:
@@ -273,9 +274,9 @@ class AppWorker:
         self.get_all_font_names()
 
     def step_renameSuffixes(self):
+        self.get_all_font_names()
         if self.options["RenameSuffixes"]:
             if self.fontHasConfig == True and 'Rename suffixes' in self.json_data:
-                self.get_all_font_names()
                 self.printLog('-- Renaming suffixes in progress.',False)
                 countGlyphs = 0
                 keySuffixes = []
@@ -323,6 +324,7 @@ class AppWorker:
         self.get_all_font_names()
 
     def step_removeGlyphOrder(self):
+        self.get_all_font_names()
         if self.options["RemoveGlyphOrder"]:
             if self.options["RemoveAllCustomParameters"]:
                 self.printLog('-- Skipping RemoveGlyphOrder > Remove All custom parametr is do it all',True)
