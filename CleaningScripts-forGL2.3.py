@@ -406,9 +406,12 @@ class AppWorker:
                             self.printLog("Error with glyph %s" % key,False)
                             errorCount += 1
                     message = "-- %s suffixes were renamed." % countGlyphs
-                    self.printLog(message,FALSE)
-                    message = "-- WARNING Encountered %s errors !!!" % errorCount
-                    self.printLog(message,True)
+                    if errorCount > 0:
+                        self.printLog(message,False)
+                        message = "-- WARNING Encountered %s errors !!!" % errorCount
+                        self.printLog(message,True)
+                    else:
+                        self.printLog(message,True)
             else:
                 print self.json_data
                 self.printLog('-- Renaming suffixes skipped for missing, corrupted json file. Or the file has no info for this operation.',False)
