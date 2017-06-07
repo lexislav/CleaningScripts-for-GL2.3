@@ -1,4 +1,4 @@
-#MenuTitle: Cleaning Scripts 0.9.1 for GL2.3
+#MenuTitle: Cleaning Scripts 0.9.2 for GL2.3
 #encoding: utf-8
 """
 CleaningScripts-forGL2.3.py
@@ -7,6 +7,7 @@ Copyright (c) 2016 odoka.cz. All rights reserved.
 """
 
 import vanilla
+import re
 import os
 import json
 
@@ -22,7 +23,7 @@ class AppController:
 
     def getWindow(self):
 
-        out = vanilla.FloatingWindow((380, 365), "Cleaning Scripts v0.9.1")
+        out = vanilla.FloatingWindow((380, 365), "Cleaning Scripts v0.9.2")
 
         height = 20
 
@@ -119,18 +120,16 @@ class AppWorker:
     generalConfigData = None
     json_data = {}
     glyphs_total = 0
+    font = None
+    renames = {}
 
     # Setting variables
     configFile = ""
     generalConfigFile = ""
     disablesNiceNames = False
 
-
-
     def __init__(self):
         pass
-
-
 
     def printLog(self, message, addLine):
         self.outputLog += message + '\n'
@@ -177,6 +176,62 @@ class AppWorker:
                  correctedName = proposedName
         return correctedName
 
+    def get_feature_code(self,code):
+        return code.split("\n")
+
+    def get_code_line(self,searchedGlyph,codeL):
+        for line in codeL:
+            if searchedGlyph in line:
+                return line
+        else:
+            return None
+
+    def get_first_line_name(self,s,f):
+        s = s[4:]
+        s = s[:-len(f)]
+        s = re.sub(r"\s+", '_', s)
+        return s
+
+    def appendFeatureSuffix(self,feature,code,codeL):
+        glyphsCount = 0
+        featureSet = []
+        SEARCH_THIS_CATEGORIES = self.json_data['Suffixes to ligatures based on OT features'][0]['search_categories']
+        NOT_SEPARABLE_SUFFIXES = self.json_data['Suffixes to ligatures based on OT features'][2]['not_separate_suffixes']
+        glyphsSet = (glyph for glyph in self.font.glyphs if glyph.category in SEARCH_THIS_CATEGORIES)
+        for glyph in glyphsSet:
+            splittedGlyphName = os.path.splitext(glyph.name)
+            if splittedGlyphName[1] in NOT_SEPARABLE_SUFFIXES:
+                searchedGlyph = " by " + glyph.name + ";"
+                searchContentGlyph = "\' by " + glyph.name + ";"
+            else:
+                searchedGlyph = " by " + splittedGlyphName[0] + ";"
+                searchContentGlyph = "\' by " + splittedGlyphName[0] + ";"
+            newGlyphName = splittedGlyphName[0] + "." + feature + splittedGlyphName[1]
+            if searchedGlyph in code:
+                codeLine = self.get_code_line(searchedGlyph,codeL)
+                if "\'" not in codeLine:
+                    first_line_name = self.get_first_line_name(codeLine,searchedGlyph)
+                    if first_line_name not in newGlyphName:
+                        newGlyphName = first_line_name + "." + feature + splittedGlyphName[1]
+                    featureSet.append( (glyph.name,newGlyphName) )
+                    glyphsCount += 1
+        if len(featureSet) > 0:
+            self.renames.update({feature:featureSet})
+        return glyphsCount
+
+    def collectRenames(self,useFeatures):
+        totalNumber = 0
+        features = []
+        for feature in self.font.features:
+            if feature.name in useFeatures:
+                features.append(feature)
+        for feature in features:
+            arrayedCode = self.get_feature_code(feature.code)
+            countGlyphs = 0
+            countGlyphs += self.appendFeatureSuffix(feature.name,feature.code,arrayedCode)
+            totalNumber += countGlyphs
+        return totalNumber
+
     def step_getConfiguration(self):
         if self.file_is_ok(self.configFile) == True:
                 json_file = open(self.configFile).read()
@@ -213,18 +268,18 @@ class AppWorker:
             if self.fontHasConfig == True and 'Rename Individual Glyphs' in self.json_data:
                 self.printLog('-- Renaming individual glyphs in progress.',False)
                 countGlyphs = 0
-                renames = {}
+                self.renames = {}
                 for line in self.json_data['Rename Individual Glyphs']:
                     individualGlyphName = line.keys()[0]
                     for sGlyph in line[individualGlyphName]:
                         if self.font.glyphs[sGlyph]:
                             newName = self.get_correct_new_name(individualGlyphName)
-                            renames.update({sGlyph: newName})
+                            self.renames.update({sGlyph: newName})
                             countGlyphs += 1
                 else:
-                    for key in renames:
-                        print "------ %s found and will be renamed to %s" % (key, renames[key])
-                        self.font.glyphs[key].name = renames[key]
+                    for key in self.renames:
+                        print "------ %s found and will be renamed to %s" % (key, self.renames[key])
+                        self.font.glyphs[key].name = self.renames[key]
                     message = "-- %s Individual glyphs have been renamed." % countGlyphs
                     self.printLog(message,True)
             else:
@@ -277,28 +332,29 @@ class AppWorker:
         self.get_all_font_names()
 
     def step_addSuffixesToLigaturesBasedOnOTCode(self):
+        self.renames = {}
         self.get_all_font_names()
-        self.printLog("Coming Soon", True)
-        # if self.options["AddSuffixesToLigaturesBasedOnOTCode"]:
-            # if self.fontHasConfig == True and 'Suffixes for ligatures based on OT Code' in self.json_data:
-            #     self.printLog('-- Adding suffixes to ligatures based on OT code',False)
-            #     countGlyphs = 0
-            #     for ligature in self.json_data['Suffixes for ligatures']:
-            #         key = ligature.keys()[0]
-            #         ligatureGlyphsString = ", ".join(ligature[key])
-            #         print "--- %s: checking existence of glyphs %s" % (key, ligatureGlyphsString)
-            #         for lglyphName in ligature[key]:
-            #             if self.font.glyphs[lglyphName]:
-            #                 newGlyphName = self.get_correct_new_name(lglyphName + "." + key)
-            #                 #print "------ %s found and will be renamed to %s" % (lglyphName, newGlyphName)
-            #                 self.font.glyphs[lglyphName].name = newGlyphName
-            #                 countGlyphs += 1
-            #     else:
-            #         message = "-- Defined suffixes added to %s glyphs." % countGlyphs
-            #         self.printLog(message,True)
-            # else:
-            #     self.printLog('-- Adding suffixes to ligatures skipped for missing or corrupted json config file',False)
-        # self.get_all_font_names()
+        self.printLog("",False)
+        if self.options["AddSuffixesToLigaturesBasedOnOTCode"]:
+            if self.fontHasConfig == True and 'Suffixes to ligatures based on OT features' in self.json_data:
+                self.printLog('-- Adding suffixes to ligatures based on OT code',False)
+                self.printLog('--- analyzing the font and it''s OT features',False)
+                settings = self.json_data['Suffixes to ligatures based on OT features']
+                numberOfGlyphs = self.collectRenames(settings[1]['use_features'])
+                self.printLog('--- %s glyphs will get suffix by it''s OT feature.\n' % numberOfGlyphs,False)
+                for feature in self.renames:
+            		print "Working with %s feature" % feature
+            		for key,newGlyphName in self.renames[feature]:
+            			print "> %s will be renamed to %s" % (key,newGlyphName)
+            			if self.font.glyphs[key]:
+            				self.font.glyphs[key].name = newGlyphName
+            			else:
+            				print "! WARNING: This pair has a problem. It was propably renamed with another feature already."
+            		else:
+            			print "\n"
+            else:
+                self.printLog('-- Adding suffixes to ligatures skipped for missing or corrupted json config file',False)
+        self.get_all_font_names()
 
     def step_renameSuffixes(self):
         self.get_all_font_names()
@@ -308,7 +364,7 @@ class AppWorker:
                 countGlyphs = 0
                 keySuffixes = []
                 wantedSuffixes = []
-                renames = {}
+                self.renames = {}
 
                 for line in self.json_data['Rename suffixes']:
                     currentKey = line.keys()[0]
@@ -327,7 +383,7 @@ class AppWorker:
                                 break
                         countGlyphs += 1
                         newGlyphName = self.get_correct_new_name(currentSuffix[0] + newSuffix)
-                        renames.update({glyph: newGlyphName})
+                        self.renames.update({glyph: newGlyphName})
                     for singleSuffix in wantedSuffixes:
                         if (singleSuffix in currentSuffix[0]) and (len(singleSuffix) + currentSuffix[0].find(singleSuffix)) == len(currentSuffix[0]):
                             newSuffix = ""
@@ -338,13 +394,24 @@ class AppWorker:
                             countGlyphs += 1
                             newGlyphName = currentSuffix[0].replace(singleSuffix,newSuffix) + currentSuffix[1]
                             print "---- EXTRA: ",singleSuffix," / ",currentSuffix[0]," in ",glyph," will be replaced with ",newSuffix," to newname: ",newGlyphName
-                            renames.update({glyph: newGlyphName})
+                            self.renames.update({glyph: newGlyphName})
                 else:
-                    for key in renames:
-                        print "---- %s will be renamed to %s" % (key, renames[key])
-                        self.font.glyphs[key].name = renames[key]
+                    errorCount = 0
+                    for key in self.renames:
+                        print "---- %s will be renamed to %s" % (key, self.renames[key])
+                        #TODO: tady to hází Filipovi chybu
+                        try:
+                            self.font.glyphs[key].name = self.renames[key]
+                        except:
+                            self.printLog("Error with glyph %s" % key,False)
+                            errorCount += 1
                     message = "-- %s suffixes were renamed." % countGlyphs
-                    self.printLog(message,True)
+                    if errorCount > 0:
+                        self.printLog(message,False)
+                        message = "-- WARNING Encountered %s errors !!!" % errorCount
+                        self.printLog(message,True)
+                    else:
+                        self.printLog(message,True)
             else:
                 print self.json_data
                 self.printLog('-- Renaming suffixes skipped for missing, corrupted json file. Or the file has no info for this operation.',False)
@@ -482,8 +549,11 @@ class AppWorker:
     def start(self, settings):
 
         self.generalConfigFile = os.path.split(os.path.realpath("CleaningScripts_forGL2.3.py"))[0]+'/cleaningscripts_config.json'
-
         self.outputLog = ''
+        if len(Glyphs.fonts) == 0:
+            self.printLog('No font to work with.',False)
+            pass
+            return
         self.printLog('==== Starting ====',False)
 
         # Get general config. JSON should be located side by side with sript file.

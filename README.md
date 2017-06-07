@@ -30,6 +30,14 @@ Search for Unnecessary glyphs defined in file and remove them from font.
 
 ## Changelog
 
+### 0.9.2
+Add new feature:
+– Add ligatures based on OT code
+
+### 0.9.1
+Fixes
+– crash on some fonts when all options in use
+
 ### 0.8
 Added new features:
 - Unicode from glyphs from PUA may be removed by script
