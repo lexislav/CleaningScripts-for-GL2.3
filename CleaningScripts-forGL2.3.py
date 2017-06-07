@@ -215,7 +215,7 @@ class AppWorker:
                     featureSet.append( (glyph.name,newGlyphName) )
                     glyphsCount += 1
         if len(featureSet) > 0:
-            self.renames.update({feature:featureSet})
+            renames.update({feature:featureSet})
         return glyphsCount
 
     def collectRenames(self,useFeatures):
