@@ -268,18 +268,18 @@ class AppWorker:
             if self.fontHasConfig == True and 'Rename Individual Glyphs' in self.json_data:
                 self.printLog('-- Renaming individual glyphs in progress.',False)
                 countGlyphs = 0
-                renames = {}
+                self.renames = {}
                 for line in self.json_data['Rename Individual Glyphs']:
                     individualGlyphName = line.keys()[0]
                     for sGlyph in line[individualGlyphName]:
                         if self.font.glyphs[sGlyph]:
                             newName = self.get_correct_new_name(individualGlyphName)
-                            renames.update({sGlyph: newName})
+                            self.renames.update({sGlyph: newName})
                             countGlyphs += 1
                 else:
-                    for key in renames:
-                        print "------ %s found and will be renamed to %s" % (key, renames[key])
-                        self.font.glyphs[key].name = renames[key]
+                    for key in self.renames:
+                        print "------ %s found and will be renamed to %s" % (key, self.renames[key])
+                        self.font.glyphs[key].name = self.renames[key]
                     message = "-- %s Individual glyphs have been renamed." % countGlyphs
                     self.printLog(message,True)
             else:
@@ -342,7 +342,6 @@ class AppWorker:
                 settings = self.json_data['Suffixes to ligatures based on OT features']
                 numberOfGlyphs = self.collectRenames(settings[1]['use_features'])
                 self.printLog('--- %s glyphs will get suffix by it''s OT feature.\n' % numberOfGlyphs,False)
-                #NOTE: pocaď good
                 for feature in self.renames:
             		print "Working with %s feature" % feature
             		for key,newGlyphName in self.renames[feature]:
@@ -365,7 +364,7 @@ class AppWorker:
                 countGlyphs = 0
                 keySuffixes = []
                 wantedSuffixes = []
-                renames = {}
+                self.renames = {}
 
                 for line in self.json_data['Rename suffixes']:
                     currentKey = line.keys()[0]
@@ -384,7 +383,7 @@ class AppWorker:
                                 break
                         countGlyphs += 1
                         newGlyphName = self.get_correct_new_name(currentSuffix[0] + newSuffix)
-                        renames.update({glyph: newGlyphName})
+                        self.renames.update({glyph: newGlyphName})
                     for singleSuffix in wantedSuffixes:
                         if (singleSuffix in currentSuffix[0]) and (len(singleSuffix) + currentSuffix[0].find(singleSuffix)) == len(currentSuffix[0]):
                             newSuffix = ""
@@ -395,13 +394,20 @@ class AppWorker:
                             countGlyphs += 1
                             newGlyphName = currentSuffix[0].replace(singleSuffix,newSuffix) + currentSuffix[1]
                             print "---- EXTRA: ",singleSuffix," / ",currentSuffix[0]," in ",glyph," will be replaced with ",newSuffix," to newname: ",newGlyphName
-                            renames.update({glyph: newGlyphName})
+                            self.renames.update({glyph: newGlyphName})
                 else:
-                    for key in renames:
-                        print "---- %s will be renamed to %s" % (key, renames[key])
+                    errorCount = 0
+                    for key in self.renames:
+                        print "---- %s will be renamed to %s" % (key, self.renames[key])
                         #TODO: tady to hází Filipovi chybu
-                        self.font.glyphs[key].name = renames[key]
+                        try:
+                            self.font.glyphs[key].name = self.renames[key]
+                        except:
+                            self.printLog("Error with glyph %s" % key,False)
+                            errorCount += 1
                     message = "-- %s suffixes were renamed." % countGlyphs
+                    self.printLog(message,FALSE)
+                    message = "-- WARNING Encountered %s errors !!!" % errorCount
                     self.printLog(message,True)
             else:
                 print self.json_data
