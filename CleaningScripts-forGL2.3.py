@@ -278,6 +278,7 @@ class AppWorker:
 
     def step_addSuffixesToLigaturesBasedOnOTCode(self):
         self.get_all_font_names()
+        self.printLog("Coming Soon", True)
         # if self.options["AddSuffixesToLigaturesBasedOnOTCode"]:
             # if self.fontHasConfig == True and 'Suffixes for ligatures based on OT Code' in self.json_data:
             #     self.printLog('-- Adding suffixes to ligatures based on OT code',False)
