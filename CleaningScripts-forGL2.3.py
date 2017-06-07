@@ -277,47 +277,83 @@ class AppWorker:
         self.get_all_font_names()
 
     def step_addSuffixesToLigaturesBasedOnOTCode(self):
+
+        def get_feature_code(code):
+        	return code.split("\n")
+
+        def get_code_line(searchedGlyph,codeL):
+            for line in codeL:
+                if searchedGlyph in line:
+                    return line
+            else:
+                return None
+
+        def get_first_line_name(s,f):
+            s = s[4:]
+            s = s[:-len(f)]
+            s = re.sub(r"\s+", '_', s)
+            return s
+
+        def collectRenames():
+        	totalNumber = 0
+        	global USE_FEATURES
+        	features = []
+        	for feature in font.features:
+        		if feature.name in USE_FEATURES:
+        			features.append(feature)
+        	for feature in features:
+        		arrayedCode = get_feature_code(feature.code)
+        		countGlyphs = 0
+        		countGlyphs += appendFeatureSuffix(feature.name,feature.code,arrayedCode)
+        		totalNumber += countGlyphs
+            return = totalNumber
+
+        def appendFeatureSuffix(feature,code,codeL):
+        	glyphsCount = 0
+        	featureSet = []
+        	global renames
+        	global SEARCH_THIS_CATEGORIES
+        	global NOT_SEPARABLE_SUFFIXES
+        	glyphsSet = (glyph for glyph in font.glyphs if glyph.category in SEARCH_THIS_CATEGORIES)
+        	for glyph in glyphsSet:
+        		splittedGlyphName = os.path.splitext(glyph.name)
+        		if splittedGlyphName[1] in NOT_SEPARABLE_SUFFIXES:
+        			searchedGlyph = " by " + glyph.name + ";"
+        			searchContentGlyph = "\' by " + glyph.name + ";"
+        		else:
+        			searchedGlyph = " by " + splittedGlyphName[0] + ";"
+        			searchContentGlyph = "\' by " + splittedGlyphName[0] + ";"
+        		newGlyphName = splittedGlyphName[0] + "." + feature + splittedGlyphName[1]
+        		if searchedGlyph in code:
+        			codeLine = get_code_line(searchedGlyph,codeL)
+        			if "\'" not in codeLine:
+        				first_line_name = get_first_line_name(codeLine,searchedGlyph)
+        				if first_line_name not in newGlyphName:
+        					newGlyphName = first_line_name + "." + feature + splittedGlyphName[1]
+        				featureSet.append( (glyph.name,newGlyphName) )
+        				glyphsCount += 1
+        	if len(featureSet) > 0:
+        		renames.update({feature:featureSet})
+        	return glyphsCount
+
         self.get_all_font_names()
         self.printLog("",False)
         if self.options["AddSuffixesToLigaturesBasedOnOTCode"]:
             if self.fontHasConfig == True and 'Suffixes to ligatures based on OT features' in self.json_data:
                 self.printLog('-- Adding suffixes to ligatures based on OT code',False)
-                countGlyphs = 0
-                featureSet = []
-                glyphsSet = (glyph for glyph in self.allGlyphsNames if glyph.category in self.json_data['search_categorieses'])
-                for glyph in glyphsSet:
-            		splittedGlyphName = os.path.splitext(glyph.name)
-            		if splittedGlyphName[1] in self.json_data['not_separate_suffixes']:
-            			searchedGlyph = " by " + glyph.name + ";"
-            			searchContentGlyph = "\' by " + glyph.name + ";"
+                self.printLog('--- analyzing the font and it's OT features',False)
+                global renames
+                print "%s glyphs will get suffix by it's OT feature.\n" % collectRenames()
+                for feature in renames:
+            		print "Working with %s feature" % feature
+            		for key,newGlyphName in renames[feature]:
+            			print "> %s will be renamed to %s" % (key,newGlyphName)
+            			if font.glyphs[key]:
+            				font.glyphs[key].name = newGlyphName
+            			else:
+            				print "! WARNING: This pair has a problem. It was propably renamed with another feature already."
             		else:
-            			searchedGlyph = " by " + splittedGlyphName[0] + ";"
-            			searchContentGlyph = "\' by " + splittedGlyphName[0] + ";"
-            		newGlyphName = splittedGlyphName[0] + "." + feature + splittedGlyphName[1]
-            		if searchedGlyph in code:
-            			codeLine = get_code_line(searchedGlyph,codeL)
-            			if "\'" not in codeLine:
-            				first_line_name = get_first_line_name(codeLine,searchedGlyph)
-            				if first_line_name not in newGlyphName:
-            					newGlyphName = first_line_name + "." + feature + splittedGlyphName[1]
-            				featureSet.append( (glyph.name,newGlyphName) )
-            				countGlyphs += 1
-            	if len(featureSet) > 0:
-            		renames.update({feature:featureSet})
-            	return countGlyphs
-                # for ligature in self.json_data['Suffixes for ligatures']:
-                #     key = ligature.keys()[0]
-                #     ligatureGlyphsString = ", ".join(ligature[key])
-                #     print "--- %s: checking existence of glyphs %s" % (key, ligatureGlyphsString)
-                #     for lglyphName in ligature[key]:
-                #         if self.font.glyphs[lglyphName]:
-                #             newGlyphName = self.get_correct_new_name(lglyphName + "." + key)
-                #             #print "------ %s found and will be renamed to %s" % (lglyphName, newGlyphName)
-                #             self.font.glyphs[lglyphName].name = newGlyphName
-                #             countGlyphs += 1
-                # else:
-                #     message = "-- Defined suffixes added to %s glyphs." % countGlyphs
-                #     self.printLog(message,True)
+            			print "\n"
             else:
                 self.printLog('-- Adding suffixes to ligatures skipped for missing or corrupted json config file',False)
         self.get_all_font_names()
