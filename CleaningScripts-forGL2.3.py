@@ -400,6 +400,7 @@ class AppWorker:
                 else:
                     for key in renames:
                         print "---- %s will be renamed to %s" % (key, renames[key])
+                        #TODO: tady to hází Filipovi chybu
                         self.font.glyphs[key].name = renames[key]
                     message = "-- %s suffixes were renamed." % countGlyphs
                     self.printLog(message,True)
