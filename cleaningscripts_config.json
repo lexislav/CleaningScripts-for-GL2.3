@@ -43,6 +43,14 @@
 		"hlig": ["longs_i"]
 	}],
 
+    "Suffixes to ligatures based on OT features": [{
+		"search_categories": ["Letter", "Number"]
+	}, {
+		"use_features": ["liga", "dlig", "hlig", "rlig"]
+	}, {
+		"not_separate_suffixes": [".short"]
+	}],
+
     "Rename Individual Glyphs": [{
 		"literSign": ["liter"]
 	}, {
