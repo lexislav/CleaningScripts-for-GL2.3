@@ -22,7 +22,7 @@ class AppController:
 
     def getWindow(self):
 
-        out = vanilla.FloatingWindow((355, 335), "Cleaning Scripts v0.9")
+        out = vanilla.FloatingWindow((380, 365), "Cleaning Scripts v0.9.1")
 
         height = 20
 
@@ -38,6 +38,8 @@ class AppController:
         out.checkBoxUpdateGlyphInfo = vanilla.CheckBox((80, height, -15, 19), "Apply Update Glyph Info", value=True, sizeStyle = 'regular')
         height += 19
         out.checkBoxAddSuffixesToLigatures = vanilla.CheckBox((80, height, -15, 19), "Add suffixes to ligatures", value=False, sizeStyle = 'regular')
+        height += 19
+        out.checkBoxAddSuffixesToLigaturesOTCode = vanilla.CheckBox((80, height, -15, 19), "Add suffixes to ligatures based on OT code", value=False, sizeStyle = 'regular')
         height += 19
         out.checkBoxRenameSuffixes = vanilla.CheckBox((80, height, -15, 19), "Rename suffixes", value=False, sizeStyle = 'regular')
         height += 19
@@ -77,6 +79,7 @@ class AppController:
                 "RemoveAllCustomParameters": self.w.checkBoxRemoveAllCustomParameters.get(),
                 "RemoveAllMastersCustomParameters": self.w.checkBoxRemoveAllMastersCustomParameters.get(),
                 "AddSuffixesToLigatures": self.w.checkBoxAddSuffixesToLigatures.get(),
+                "AddSuffixesToLigaturesBasedOnOTCode": self.w.checkBoxAddSuffixesToLigaturesOTCode.get(),
                 "RenameSuffixes": self.w.checkBoxRenameSuffixes.get(),
                 "RenameIndividualGlyphs": self.w.checkBoxRenameIndividualGlyphs.get(),
                 "RemoveAllFeatures": self.w.checkBoxRemoveAllFeatures.get(),
@@ -273,6 +276,31 @@ class AppWorker:
                 self.printLog('-- Adding suffixes to ligatures skipped for missing or corrupted json config file',False)
         self.get_all_font_names()
 
+    def step_addSuffixesToLigaturesBasedOnOTCode(self):
+        self.get_all_font_names()
+        self.printLog("",False)
+        self.printLog("-- Feature not fully implemented Yet. Coming Soon", True)
+        # if self.options["AddSuffixesToLigaturesBasedOnOTCode"]:
+            # if self.fontHasConfig == True and 'Suffixes for ligatures based on OT Code' in self.json_data:
+            #     self.printLog('-- Adding suffixes to ligatures based on OT code',False)
+            #     countGlyphs = 0
+            #     for ligature in self.json_data['Suffixes for ligatures']:
+            #         key = ligature.keys()[0]
+            #         ligatureGlyphsString = ", ".join(ligature[key])
+            #         print "--- %s: checking existence of glyphs %s" % (key, ligatureGlyphsString)
+            #         for lglyphName in ligature[key]:
+            #             if self.font.glyphs[lglyphName]:
+            #                 newGlyphName = self.get_correct_new_name(lglyphName + "." + key)
+            #                 #print "------ %s found and will be renamed to %s" % (lglyphName, newGlyphName)
+            #                 self.font.glyphs[lglyphName].name = newGlyphName
+            #                 countGlyphs += 1
+            #     else:
+            #         message = "-- Defined suffixes added to %s glyphs." % countGlyphs
+            #         self.printLog(message,True)
+            # else:
+            #     self.printLog('-- Adding suffixes to ligatures skipped for missing or corrupted json config file',False)
+        # self.get_all_font_names()
+
     def step_renameSuffixes(self):
         self.get_all_font_names()
         if self.options["RenameSuffixes"]:
@@ -437,6 +465,7 @@ class AppWorker:
         self.step_renameIndividualGlyphs()
         self.step_updateGlyphInfo()
         self.step_addSuffixesToLigatures()
+        self.step_addSuffixesToLigaturesBasedOnOTCode()
         self.step_renameSuffixes()
         self.step_removeGlyphOrder()
         self.step_removeAllCustomParameters()
