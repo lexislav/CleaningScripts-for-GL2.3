@@ -7,6 +7,7 @@ Copyright (c) 2016 odoka.cz. All rights reserved.
 """
 
 import vanilla
+import re
 import os
 import json
 
@@ -119,6 +120,7 @@ class AppWorker:
     generalConfigData = None
     json_data = {}
     glyphs_total = 0
+    font = None
 
     # Setting variables
     configFile = ""
@@ -213,7 +215,7 @@ class AppWorker:
                     featureSet.append( (glyph.name,newGlyphName) )
                     glyphsCount += 1
         if len(featureSet) > 0:
-            renames.update({feature:featureSet})
+            self.renames.update({feature:featureSet})
         return glyphsCount
 
     def collectRenames(self,useFeatures):
@@ -340,16 +342,16 @@ class AppWorker:
                 numberOfGlyphs = self.collectRenames(settings[1]['use_features'])
                 self.printLog('--- %s glyphs will get suffix by it''s OT feature.\n' % numberOfGlyphs,False)
                 #NOTE: pocaď good
-                # for feature in self.renames:
-            	# 	print "Working with %s feature" % feature
-            	# 	for key,newGlyphName in self.renames[feature]:
-            	# 		print "> %s will be renamed to %s" % (key,newGlyphName)
-            	# 		if font.glyphs[key]:
-            	# 			font.glyphs[key].name = newGlyphName
-            	# 		else:
-            	# 			print "! WARNING: This pair has a problem. It was propably renamed with another feature already."
-            	# 	else:
-            	# 		print "\n"
+                #for feature in renames:
+            		# print "Working with %s feature" % feature
+            		# for key,newGlyphName in renames[feature]:
+            		# 	print "> %s will be renamed to %s" % (key,newGlyphName)
+            		# 	if self.font.glyphs[key]:
+            		# 		self.font.glyphs[key].name = newGlyphName
+            		# 	else:
+            		# 		print "! WARNING: This pair has a problem. It was propably renamed with another feature already."
+            		# else:
+            		# 	print "\n"
             else:
                 self.printLog('-- Adding suffixes to ligatures skipped for missing or corrupted json config file',False)
         self.get_all_font_names()
@@ -537,8 +539,11 @@ class AppWorker:
     def start(self, settings):
 
         self.generalConfigFile = os.path.split(os.path.realpath("CleaningScripts_forGL2.3.py"))[0]+'/cleaningscripts_config.json'
-
         self.outputLog = ''
+        if len(Glyphs.fonts) == 0:
+            self.printLog('No font to work with.',False)
+            pass
+            return
         self.printLog('==== Starting ====',False)
 
         # Get general config. JSON should be located side by side with sript file.
