@@ -22,7 +22,7 @@ class AppController:
 
     def getWindow(self):
 
-        out = vanilla.FloatingWindow((380, 365), "Cleaning Scripts v0.9")
+        out = vanilla.FloatingWindow((380, 365), "Cleaning Scripts v0.9.1")
 
         height = 20
 
