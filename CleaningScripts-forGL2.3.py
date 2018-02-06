@@ -1,4 +1,4 @@
-#MenuTitle: Cleaning Scripts 0.9.2 for GL2.3
+#MenuTitle: Cleaning Scripts 0.9.3 for GL2.3
 #encoding: utf-8
 """
 CleaningScripts-forGL2.3.py
@@ -187,9 +187,11 @@ class AppWorker:
             return None
 
     def get_first_line_name(self,s,f):
-        s = s[4:]
-        s = s[:-len(f)]
-        s = re.sub(r"\s+", '_', s)
+        # s = s[4:]
+        # s = s[:-len(f)]
+        # s = re.sub(r"\s+", '_', s)
+        s = f[4:]
+        s = s[:-1]
         return s
 
     def appendFeatureSuffix(self,feature,code,codeL):
