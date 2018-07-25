@@ -268,6 +268,7 @@ class AppWorker:
             if self.fontHasConfig == True and 'Rename Individual Glyphs' in self.json_data:
                 self.printLog('-- Renaming individual glyphs in progress.',False)
                 countGlyphs = 0
+                errorGlyphs = 0
                 self.renames = {}
                 for line in self.json_data['Rename Individual Glyphs']:
                     individualGlyphName = line.keys()[0]
@@ -280,10 +281,15 @@ class AppWorker:
                     for key in self.renames:
                         print "------ %s found and will be renamed to %s" % (key, self.renames[key])
                         if self.font.glyphs[self.renames[key]]:
-                            print "------ WARNING: %s already exists and won't be renamed to %s" % (key, self.renames[key])
+                            self.printLog("------ WARNING: %s already exists and won't be renamed to %s" % (key, self.renames[key]),False)
+                            errorGlyphs += 1
+                            countGlyphs -= 1
                         else:
                             self.font.glyphs[key].name = self.renames[key]
-                    message = "-- %s Individual glyphs have been renamed." % countGlyphs
+                    if errorGlyphs == 0:
+                        message = "-- %s Individual glyphs have been renamed." % countGlyphs
+                    else:
+                        message = "-- %s Individual glyphs have been renamed. %s glyphs has been ignored with warning." % (countGlyphs,errorGlyphs)
                     self.printLog(message,True)
             else:
                 self.printLog('-- Renaming individual glyphs skipped. Missing, corrupted json file. Or the file has no info for this operation.',False)
