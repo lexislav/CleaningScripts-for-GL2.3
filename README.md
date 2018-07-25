@@ -30,6 +30,10 @@ Search for Unnecessary glyphs defined in file and remove them from font.
 
 ## Changelog
 
+### 0.9.4
+Fixes
+- Rename individual glyphs bug, when requested glyph rename already exists
+
 ### 0.9.2
 Add new feature:
 – Add ligatures based on OT code

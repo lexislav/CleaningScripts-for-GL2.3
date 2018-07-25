@@ -1,4 +1,4 @@
-#MenuTitle: Cleaning Scripts 0.9.3 for GL2.3
+#MenuTitle: Cleaning Scripts 0.9.4 for GL2.3
 #encoding: utf-8
 """
 CleaningScripts-forGL2.3.py
@@ -187,9 +187,7 @@ class AppWorker:
             return None
 
     def get_first_line_name(self,s,f):
-        # s = s[4:]
-        # s = s[:-len(f)]
-        # s = re.sub(r"\s+", '_', s)
+        # glyph name separation, s is not nessesary now
         s = f[4:]
         s = s[:-1]
         return s
@@ -270,6 +268,7 @@ class AppWorker:
             if self.fontHasConfig == True and 'Rename Individual Glyphs' in self.json_data:
                 self.printLog('-- Renaming individual glyphs in progress.',False)
                 countGlyphs = 0
+                errorGlyphs = 0
                 self.renames = {}
                 for line in self.json_data['Rename Individual Glyphs']:
                     individualGlyphName = line.keys()[0]
@@ -281,8 +280,16 @@ class AppWorker:
                 else:
                     for key in self.renames:
                         print "------ %s found and will be renamed to %s" % (key, self.renames[key])
-                        self.font.glyphs[key].name = self.renames[key]
-                    message = "-- %s Individual glyphs have been renamed." % countGlyphs
+                        if self.font.glyphs[self.renames[key]]:
+                            self.printLog("------ WARNING: %s already exists and won't be renamed to %s" % (key, self.renames[key]),False)
+                            errorGlyphs += 1
+                            countGlyphs -= 1
+                        else:
+                            self.font.glyphs[key].name = self.renames[key]
+                    if errorGlyphs == 0:
+                        message = "-- %s Individual glyphs have been renamed." % countGlyphs
+                    else:
+                        message = "-- %s Individual glyphs have been renamed. %s glyphs has been ignored with warning." % (countGlyphs,errorGlyphs)
                     self.printLog(message,True)
             else:
                 self.printLog('-- Renaming individual glyphs skipped. Missing, corrupted json file. Or the file has no info for this operation.',False)
