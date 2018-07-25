@@ -1,4 +1,4 @@
-#MenuTitle: Cleaning Scripts 0.9.4 for GL2.3
+#MenuTitle: Cleaning Scripts 0.9.5 for GL2.3
 #encoding: utf-8
 """
 CleaningScripts-forGL2.3.py
@@ -279,12 +279,12 @@ class AppWorker:
                             countGlyphs += 1
                 else:
                     for key in self.renames:
-                        print "------ %s found and will be renamed to %s" % (key, self.renames[key])
                         if self.font.glyphs[self.renames[key]]:
-                            self.printLog("------ WARNING: %s already exists and won't be renamed to %s" % (key, self.renames[key]),False)
+                            self.printLog("----- WARNING: %s already exists. Request to rename %s to %s will be ignored" % (self.renames[key], key, self.renames[key]), False)
                             errorGlyphs += 1
                             countGlyphs -= 1
                         else:
+                            print "------ %s found and will be renamed to %s" % (key, self.renames[key])
                             self.font.glyphs[key].name = self.renames[key]
                     if errorGlyphs == 0:
                         message = "-- %s Individual glyphs have been renamed." % countGlyphs
