@@ -1,8 +1,8 @@
-#MenuTitle: Cleaning Scripts 0.9.5 for GL2.3
+#MenuTitle: Cleaning Scripts 0.9.5 for GL3.X
 #encoding: utf-8
 """
-CleaningScripts-forGL2.3.py
-Created by Alexandr Hudeček on 2016-06-16.
+CleaningScripts-forGL3Xpy
+Created by Alexandr Hudeček on 2021-05-03.
 Copyright (c) 2016 odoka.cz. All rights reserved.
 """
 
@@ -135,9 +135,9 @@ class AppWorker:
         self.outputLog += message + '\n'
         if addLine == True:
             self.outputLog += '\n'
-            print message + '\n'
+            print (message + '\n')
         else:
-            print message
+            print (message)
 
     def removeCustomParameter(self, font, key):
         del(font.customParameters[key])
@@ -151,7 +151,7 @@ class AppWorker:
     def is_json(self, myjson):
         try:
             json_object = json.loads(myjson)
-        except ValueError, e:
+        except ValueError:
             return False
         return True
 
@@ -284,7 +284,7 @@ class AppWorker:
                             errorGlyphs += 1
                             countGlyphs -= 1
                         else:
-                            print "------ %s found and will be renamed to %s" % (key, self.renames[key])
+                            print ("------ %s found and will be renamed to %s" % (key, self.renames[key]))
                             self.font.glyphs[key].name = self.renames[key]
                     if errorGlyphs == 0:
                         message = "-- %s Individual glyphs have been renamed." % countGlyphs
@@ -303,7 +303,7 @@ class AppWorker:
             self.get_all_font_names()
             errorGlyphs = []
             for glyphName in self.allGlyphsNames:
-                print "---updating %s" % glyphName
+                print ("---updating %s" % glyphName)
                 if self.font.glyphs[glyphName]:
                     self.font.glyphs[glyphName].updateGlyphInfo(True)
                 else:
@@ -311,7 +311,7 @@ class AppWorker:
             else:
                 if len(errorGlyphs) > 0:
                     self.printLog('-- WARNING: error updating % s glyphs.' % len(errorGlyphs), False)
-                    print '---- ERROR OCCURED IN THESE GLYPHS: %s' % ",".join(errorGlyphs)
+                    print ('---- ERROR OCCURED IN THESE GLYPHS: %s' % ",".join(errorGlyphs))
                     self.printLog('',True)
                 else:
                     self.printLog('', True)
@@ -326,7 +326,7 @@ class AppWorker:
                 for ligature in self.json_data['Suffixes for ligatures']:
                     key = ligature.keys()[0]
                     ligatureGlyphsString = ", ".join(ligature[key])
-                    print "--- %s: checking existence of glyphs %s" % (key, ligatureGlyphsString)
+                    print ("--- %s: checking existence of glyphs %s" % (key, ligatureGlyphsString))
                     for lglyphName in ligature[key]:
                         if self.font.glyphs[lglyphName]:
                             newGlyphName = self.get_correct_new_name(lglyphName + "." + key)
@@ -352,15 +352,15 @@ class AppWorker:
                 numberOfGlyphs = self.collectRenames(settings[1]['use_features'])
                 self.printLog('--- %s glyphs will get suffix by it''s OT feature.\n' % numberOfGlyphs,False)
                 for feature in self.renames:
-            		print "Working with %s feature" % feature
-            		for key,newGlyphName in self.renames[feature]:
-            			print "> %s will be renamed to %s" % (key,newGlyphName)
-            			if self.font.glyphs[key]:
-            				self.font.glyphs[key].name = newGlyphName
-            			else:
-            				print "! WARNING: This pair has a problem. It was propably renamed with another feature already."
-            		else:
-            			print "\n"
+                    print ("Working with %s feature" % feature)
+                    for key,newGlyphName in self.renames[feature]:
+                        print ("> %s will be renamed to %s" % (key,newGlyphName))
+                        if self.font.glyphs[key]:
+                            self.font.glyphs[key].name = newGlyphName
+                        else:
+                            print ("! WARNING: This pair has a problem. It was propably renamed with another feature already.")
+                    else:
+                        print ("\n")
             else:
                 self.printLog('-- Adding suffixes to ligatures skipped for missing or corrupted json config file',False)
         self.get_all_font_names()
@@ -402,12 +402,12 @@ class AppWorker:
                                     break
                             countGlyphs += 1
                             newGlyphName = currentSuffix[0].replace(singleSuffix,newSuffix) + currentSuffix[1]
-                            print "---- EXTRA: ",singleSuffix," / ",currentSuffix[0]," in ",glyph," will be replaced with ",newSuffix," to newname: ",newGlyphName
+                            print ("---- EXTRA: ",singleSuffix," / ",currentSuffix[0]," in ",glyph," will be replaced with ",newSuffix," to newname: ",newGlyphName)
                             self.renames.update({glyph: newGlyphName})
                 else:
                     errorCount = 0
                     for key in self.renames:
-                        print "---- %s will be renamed to %s" % (key, self.renames[key])
+                        print ("---- %s will be renamed to %s" % (key, self.renames[key]))
                         #TODO: tady to hází Filipovi chybu
                         try:
                             self.font.glyphs[key].name = self.renames[key]
@@ -422,7 +422,7 @@ class AppWorker:
                     else:
                         self.printLog(message,True)
             else:
-                print self.json_data
+                print (self.json_data)
                 self.printLog('-- Renaming suffixes skipped for missing, corrupted json file. Or the file has no info for this operation.',False)
         self.get_all_font_names()
 
@@ -509,11 +509,11 @@ class AppWorker:
                 countGlyphs = 0
                 for uneccessary_glyph in self.json_data['Unnecessary Glyphs']:
                     if self.font.glyphs[uneccessary_glyph]:
-                        print "---- removing %s" % uneccessary_glyph
+                        print ("---- removing %s" % uneccessary_glyph)
                         del(self.font.glyphs[uneccessary_glyph])
                         countGlyphs += 1
                     else:
-                        print "---- Unnecessary glyph not present in font: %s" % uneccessary_glyph
+                        print ("---- Unnecessary glyph not present in font: %s" % uneccessary_glyph)
                 else: self.printLog("%s glyphs has been removed." % countGlyphs,True)
             else:
                 self.printLog('-- Removing Unnecessary Glyphs skipped for missing or corrupted json config file',False)
