@@ -257,8 +257,9 @@ class AppWorker:
             PUAglyphs = []
             self.printLog('-- Removing unicode for glyphs in PUA.',False)
             for glyph in self.font.glyphs:
-            	if (glyph.unicode >= "E000" and glyph.unicode <= "F8FF") or (glyph.unicode >= "F0000" and glyph.unicode <= "FFFFD") or (glyph.unicode >= "100000" and glyph.unicode <= "10FFFD"):
-            		PUAglyphs.append(glyph.name)
+                if (glyph.unicode):
+                    if (glyph.unicode >= "E000" and glyph.unicode <= "F8FF") or (glyph.unicode >= "F0000" and glyph.unicode <= "FFFFD") or (glyph.unicode >= "100000" and glyph.unicode <= "10FFFD"):
+                        PUAglyphs.append(glyph.name)
             for glyph in PUAglyphs:
                 self.font.glyphs[glyph].unicode = None
             self.printLog("-- Unicode has been removed from %s glyphs originaly in PUA" % len(PUAglyphs),True)
