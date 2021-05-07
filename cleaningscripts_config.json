@@ -52,7 +52,7 @@
 	}],
 
     "Rename Individual Glyphs": [{
-		"literSign": ["liter"]
+		"literSign": ["liter", "litre"]
 	}, {
 		"published": ["publish"]
 	}, {
