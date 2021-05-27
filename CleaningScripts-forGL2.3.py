@@ -272,7 +272,7 @@ class AppWorker:
                 errorGlyphs = 0
                 self.renames = {}
                 for line in self.json_data['Rename Individual Glyphs']:
-                    individualGlyphName = line.keys()[0]
+                    individualGlyphName = list(line.keys())[0]
                     for sGlyph in line[individualGlyphName]:
                         if self.font.glyphs[sGlyph]:
                             newName = self.get_correct_new_name(individualGlyphName)
@@ -325,7 +325,7 @@ class AppWorker:
                 self.printLog('-- Adding suffixes to ligatures',False)
                 countGlyphs = 0
                 for ligature in self.json_data['Suffixes for ligatures']:
-                    key = ligature.keys()[0]
+                    key = list(ligature.keys())[0]
                     ligatureGlyphsString = ", ".join(ligature[key])
                     print ("--- %s: checking existence of glyphs %s" % (key, ligatureGlyphsString))
                     for lglyphName in ligature[key]:
@@ -377,7 +377,7 @@ class AppWorker:
                 self.renames = {}
 
                 for line in self.json_data['Rename suffixes']:
-                    currentKey = line.keys()[0]
+                    currentKey = list(line.keys())[0]
                     keySuffixes.append(currentKey)
                     wantedSuffixes += line[currentKey]
 
